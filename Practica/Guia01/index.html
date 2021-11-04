@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Hola! Soy un Titulo</title>
+</head>
+<body>
+
+<?php
+
+
+requiere("config.php")
+
+if (!conn) {
+	echo '<h1>No hay conecion a la bbdd.</h1>'
+} else {
+	echo '<h1>Conectado</h1>'
+}
+
+$consulta1 = 'SELECT COD_POSTAL, NOMBRE FROM LOCALIDAD';
+$resultado1 = mysqli_query($conn, $consulta1);
+
+while ($file = $resultado1->fetch_array()) {
+	$filas[] = $fila;
+}
+
+echo '<ul>';
+foreach ($fila as $f) {
+	echo '<li>('.$f["COD_POSTAL"].') '.$f["NOMBRE"].'</li>'
+}
+echo '</ul>;'
+?>
+
+<form action="insertar localidad.php" method="get">
+	
+
+</form>
+
+</body>
+</html>
