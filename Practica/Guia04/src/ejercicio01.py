@@ -10,7 +10,7 @@ def main():
     index = ord('a')
     for key in claves:
         address = hash(key)
-        print(f"{chr(index)}) {key:5d} -> h({key}) = {address}")
+        print(f"{chr(index)}) {key:5d} -> h({key:5d}) = {address}")
         hashes.append(address)
         index += 1
 

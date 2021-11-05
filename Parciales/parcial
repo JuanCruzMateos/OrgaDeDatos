@@ -1,0 +1,218 @@
+Utilizaria un archivo de registros en donde cada registro contenga una clave del arbol. Dado que en los arboles B+ solo las hojas contienen los elementos (los nodos internos contienen claves para guiar la busqueda en el arbol), y estas se encuentran enlazadas en forma de lista, para persistir el arbol se prodria recorrer secuancualmente la lista enlazada de hojas persistiendo cada clave alli presente. De esta manera, se estaria persistiendo el contenido del arbol de manera ordenada.
+
+Para despersistir el arbol, se inicia con un arbol vacio e iterativamente se lee una clave del archivo de persistencia (mientras que no sea fin de archivo) y se inserta dicha clave en el arbol utilizando la primitiva de insercion para el arbol B+ (nodos interiores -> indices para busqueda, nodos hoja -> claves, insercion de ).
+
+
+
+
+
+
+Orden :: menor -> mayor
+
+1. PERRO: los documentos recuperados deben contener el termino PERRO
+2. PERRO OR GATO OR CANARIO: mas costoso porque se busca mas de un termino, pero cuando se encuentra uno el documento no se continua buscando los demas porque ya se satisface la condidion
+3. PERRO AND GATO: mas costoso, se buscan aquellos documentos que contengangan ambos terminos, al encontrar uno la busqueda debe continuar para verificar si existe el otro termino tambien
+
+
+
+
+Original :: 56,15,37,50,02,11,20,32,12,24,31,05,34,07
+
+aux1 :: 56 / 02,11,20,32 / 05, 34
+aux2 :: 15,37,50 / 12,24,31 / 07
+
+ordenado:: 15,37,50,56,02,11,12,20,24,31,32,05,07,34
+
+aux1 :: 15,37,50,56 / 05,07,34
+aux2 :: 02,11,12,20,24,31,32 / 
+
+ordenado:: 02,11,12,15,20,24,31,32,37,50,56,05,07,34
+
+aux1 :: 02,11,12,15,20,24,31,32,37,50,56
+aux2 :: 05,07,34
+
+ordenado :: 02,05,07,11,12,15,20,24,31,32,34,37,50,56
+
+final ordenado :: 02,05,07,11,12,15,20,24,31,32,34,37,50,56
+
+
+
+
+a) reg (
+    id_persona:: entero -> 4 bytes (int == 4 bytes)
+    dni :: char[8] -> 8 bytes  (char == 1 bytes)
+    apellido :: char[30] -> 30 bytes
+    nombres :: char[50] -> 50 bytes
+)
+
+=> registro = 4 + 8 + 30 + 50 = 92 bytes /registro
+
+FB = 512 bytes/sector div 92 bytes = 5 registros por sector
+
+
+b) 1.000.000 registros
+    
+1.000.000 registros / 5 reg/sec = 200000 sectores * 512 bytes/sec = 102400000 bytes
+
+102400000 bytes * 1MB/2²⁰ bytes = 97.65625 MB
+
+
+
+
+
+
+
+Vocabulario  | Listas invertidas
+----------------------------------
+archivo      |   1
+DNI          |   2, 3
+genera       |   4
+Indexar      |   1, 4
+indice       |   2, 4
+Persona      |   1, 3
+
+
+
+Se tiene un registro de longitud fija con un identificador (ID) y un archivo de 100 posiciones 
+en el cual las primeras 50 ya están ocupadas. 
+Se desea realizar una organización directa en el espacio disponible. 
+Se propone utilizar una función de dispersión del tipo ID MOD 101. 
+¿Es óptima esta solución? En caso afirmativo, justificar. Caso contrario, 
+proponer una mejor función y explicar.
+
+Proponer un método de resolución de colisiones si se sabe de antemano que se tendrá gran cantidad de 
+colisiones dispersas en las claves. 
+Justificar.
+
+
+
+
+No es optimo. 
+Al elegir M como 101 el espacio de direcciones sera [0, 100] dando un total de 101 direcciones posibles.
+Si el archivo cuenta unicamente con 100 posisiones [0, 99], en el caso en que la funcion hash retorne la direccion
+100, esta no existira en el archivo y no podra guardarse.
+
+Una solucion es modificar M de 101 a 100, y asi evitar este problema. Ota solucion, mejor que la anterior,
+es aumentar en 1, de 100 a 101, las posiciones del archivo y conservar asi el numero 101, ya que es primo
+y al serlo garantiza una mejor distribucion de las clave.
+
+Densidad = 50 / 100 = 0.5
+Como a mayor densidad mayor probabilidad de colisiones, es esperable que dadas las condiciones comiencen a haber colisiones. 
+
+Para resolver las colision, utilizaria buckets: agrupar todos los registros que colisionan en una misma cubera.
+Al buscar un registro, recupero la cubeta que corresponde a la clave y busco el registro en ella. 
+
+
+
+
+1) Metodo Resto de division o Modulo 721
+
+a. 50 mod 721  =  50
+b. 125 mod 721 =  125
+c. 899 mod 721 =  178
+d. 58 mod 721  =  58
+e. 476 mod 721 =  476
+Obs: no se observan colisiones
+
+
+2) Plegado y suma para 3 dígitos
+a) 22456780
+   
+   22 456 780
+   suma = 1258
+   trunco => 258 
+   luego h(k) = 258
+    
+b) 34567209
+
+   34 567 209
+   suma = 807
+   luego h(k) = 807
+   
+c) 23455472
+
+   23 455 472
+   suma = 950
+   luego h(k) = 950
+   
+d) 13234567
+   
+   13 234 567
+   suma = 814
+   luego h(k) = 814
+   
+Obs: no se observan colisiones
+
+3) Cuadrado Medio para 4 dígitos
+
+a. k = 14999345, k² = 224980350429025  -> 224980 3504 29025   => 3504
+b. k = 34555456, k² = 1194079539367936 -> 119407 9539 367936  => 9539
+c. k = 30789456, k² = 947990600775936  -> 947990 6007 75936   => 6007
+d. k = 14772456, k² = 218225456271936  -> 218225 4562 71936   => 4562
+
+Obs: no se observan colisiones
+
+4) Método de compresión: para 4 dígitos. Aplicar modulo 127
+a. cuchara -> h(cuchara) = 111
+b. tenedor -> h(tenedor) = 99
+c. cuchillo -> h(cuchillo) = 27
+d. plato -> h(plato) = 102
+
+Obs: no se observan coliciones
+
+
+
+Vocabulario  | Listas invertidas
+----------------------------------
+costa        |  (3, 1), (4, 1)
+Don          |  (1, 1) 
+Quijote      |  (1, 1), (2, 1) 
+mancha       |  (1, 1), (3, 1)
+monumento    |  (2, 1), (4, 1)
+
+
+
+
+
+
+Dada la siguiente definición conceptual:
+
+Libros_Biblioteca(
+ (ISBN) E4,
+ (TITULO) C36,
+ (EDITORIAL) C24,
+ (AUTOR) C30,
+ (CANT_PAGINAS) E2,
+ (EJEMPLAR_PARA_PRESTAR) E1,
+ (GENERO) C34,
+ (DESCRIPCION) C100,
+ (UBICACION) C25
+ )
+
+a) Determine la cantidad mínima de archivos involucrados. 
+Proponga un nombre apropiado para cada uno de ellos.
+b) Se conoce que el factor de bloqueo lógico es de 256 bytes y el factor de bloqueo físico es de 2KB. 
+Construya la definición lógica de la definición conceptual dada a fin de formar un 
+registro de longitud fija.
+c) Se espera tener una alta volatilidad. 
+¿Es adecuada la definición lógica construida? Justifique su respuesta.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -22,6 +22,8 @@
  */
 #define ADDRSPACE_SIZE 12007
 
+#define LEN_NOMBRE 25
+
 /**
  * Estados posibles de los registros en el archivo.
  */
@@ -37,7 +39,7 @@ typedef enum estado {
  */
 typedef struct corredor {
     int dni;
-    char nombre[25];
+    char nombre[LEN_NOMBRE];
     char sexo;
     int edad;
     int categoria;
@@ -53,7 +55,13 @@ void init_file(char *filename);
 /**
  * Funcion de hash: metodo de modulo.
  */
-long int hash(int dni);
+long hash(int dni);
+
+/**
+ *  Devuelve la psoicion  del archivo correspondiente al registro cuyo dni
+ *  es el indicado o -1 en caso de no existir.
+ */
+long buscar_posicion(FILE *file, int dni);
 
 /**
  *  Alta de un corredor. tiempo se setea en 0 y estado del registro en el archivo en OCUPADO.
@@ -87,12 +95,7 @@ void listado_tiempo_general(char *filename);
 void listado_tiempo_categoria(char *filename);
 
 /**
- *  Devuelve el contenido del archivo correspondiente al dni del corredor.
- */
-long int buscar_posicion(FILE *file, int dni);
-
-/**
- * 
+ *  Devuelve un struct con los campos indicados,.
  */
 corredor_t new_corredor(char *nombre, int dni, char sexo, int edad, int categoria, estado_t estado, float tiempo);
 
@@ -100,16 +103,30 @@ int main(int argc, char const *argv[]) {
     char *filename = "./dat/corredores.dat";
     init_file(filename);
 
+    alta(filename, "ultimo", 12006, 'M', 27, 1);
+    alta(filename, "ultimo otro", 24013, 'M', 27, 1);
+    alta(filename, "primero", 0, 'M', 27, 1);
+    alta(filename, "primero otro", 12007, 'M', 27, 1);
     alta(filename, "juan Cruz", 38443617, 'M', 27, 1);
+    alta(filename, "juan carlos", 38431610, 'M', 27, 1);
     alta(filename, "cande ", 39251478, 'F', 25, 3);
     alta(filename, "guada mateos", 40251478, 'F', 24, 2);
     alta(filename, "loli ", 41251478, 'F', 22, 5);
     alta(filename, "pepe argento", 38443617, 'M', 41, 7);
     listado_tiempo_general(filename);
-    listado_tiempo_categoria(filename);
-    baja(filename, 38443617);
+    // listado_tiempo_categoria(filename);
+    baja(filename, 0);
     listado_tiempo_general(filename);
-    baja(filename, 38443617);
+    baja(filename, 0);
+    listado_tiempo_general(filename);
+    baja(filename, 2);
+    listado_tiempo_general(filename);
+    baja(filename, 24013);
+    listado_tiempo_general(filename);
+    baja(filename, 12006);
+    listado_tiempo_general(filename);
+    alta(filename, "ultimo actualziado", 12006, 'M', 27, 1);
+    alta(filename, "ultimo otro actualziado", 24013, 'M', 27, 1);
     listado_tiempo_general(filename);
     baja(filename, 38443617);
     listado_tiempo_general(filename);
@@ -126,18 +143,45 @@ void init_file(char *filename) {
     fclose(file);
 }
 
-long int hash(int dni) {
+long hash(int dni) {
     return (long)sizeof(corredor_t) * (dni % ADDRSPACE_SIZE);
 }
 
 /**
+ * Devuelve la posicion del registro en el archivo o -1 en caso de no existir.
+ */
+long buscar_posicion(FILE *file, int dni) {
+    long pos_hash, posicion;
+    corredor_t c;
+
+    pos_hash = hash(dni);
+    fseek(file, pos_hash, SEEK_SET);
+    fread(&c, sizeof(corredor_t), 1, file);
+    if (c.estado == LIBRE)
+        posicion = -1;
+    else {
+        while (!(c.estado == OCUPADO && c.dni == dni) && c.estado != LIBRE && ftell(file) != pos_hash) {
+            fread(&c, sizeof(corredor_t), 1, file);
+            if (feof(file))
+                fseek(file, 0L, SEEK_SET);
+        }
+        if (c.estado == OCUPADO && c.dni == dni) {
+            posicion = ftell(file) - (long)sizeof(corredor_t);
+        } else {
+            posicion = -1;
+        }
+    }
+    fseek(file, 0, SEEK_SET);
+    return posicion;
+}
+
+/**
  * Si la ubucacion esta OCUPADA -> ubicacion + 1 hasta encontrar una posicion LIBRE || BORRADA.
- * Se graba el registro alli.
  */
 void alta(char *filename, char *nombre, int dni, char sexo, int edad, int categoria) {
-    corredor_t reg;
-    long int pos;
     FILE *file;
+    long pos;
+    corredor_t reg;
 
     file = fopen(filename, "rb+");
     pos = hash(dni);
@@ -169,33 +213,26 @@ void alta(char *filename, char *nombre, int dni, char sexo, int edad, int catego
  * el registro cuyo dni es igual al pasado por parametro o hasta llegar a un registro LIBRE, en cuyo caso
  * no existe ningun registro identificado por el dni.
  */
+
 void baja(char *filename, int dni) {
-    corredor_t c = {.estado = BORRADO};
-    long int pos;
     FILE *file;
-    int encontrado = 0;
+    long pos;
+    corredor_t c;
 
     file = fopen(filename, "rb+");
-    pos = hash(dni);
-    fseek(file, pos, SEEK_SET);
-    fread(&c, sizeof(corredor_t), 1, file);
-    while (!encontrado && c.estado != LIBRE && ftell(file) != pos) {
-        if (c.estado == OCUPADO && c.dni == dni) {
-            encontrado = 1;
-            c.estado = BORRADO;
-            fseek(file, ftell(file) - (long)sizeof(corredor_t), SEEK_SET);
-            fwrite(&c, sizeof(corredor_t), 1, file);
-        } else {
-            if (feof(file))
-                fseek(file, 0L, SEEK_SET);
-            fread(&c, sizeof(corredor_t), 1, file);
-        }
+    pos = buscar_posicion(file, dni);
+    if (pos != -1) {
+        fseek(file, pos, SEEK_SET);
+        fread(&c, sizeof(corredor_t), 1, file);
+        c.estado = BORRADO;
+        fseek(file, pos, SEEK_SET);
+        fwrite(&c, sizeof(corredor_t), 1, file);
     }
     fclose(file);
 }
 
 void modificacion(char *filename, corredor_t corredor) {
-    long int pos;
+    long pos;
     FILE *file;
 
     file = fopen(filename, "rb+");
@@ -208,7 +245,7 @@ void modificacion(char *filename, corredor_t corredor) {
 
 void cargar_tiempo(char *filename, int dni, float tiempo) {
     corredor_t c;
-    long int pos;
+    long pos;
     FILE *file;
     int encontrado = 0;
 
@@ -254,48 +291,29 @@ void listado_tiempo_categoria(char *filename) {
     corredor_t c;
     FILE *file;
     int cat_actual, max_categoria = -1;
+    int printed = 0;
 
     file = fopen(filename, "rb");
     while (fread(&c, sizeof(corredor_t), 1, file) == 1) {
-        if (c.categoria > max_categoria) {
+        if (c.estado == OCUPADO && c.categoria > max_categoria) {
             max_categoria = c.categoria;
         }
     }
     cat_actual = 1;
+    printf("Listado por Categoria:\n");
     while (cat_actual <= max_categoria) {
         fseek(file, 0L, SEEK_SET);
         while (fread(&c, sizeof(corredor_t), 1, file) == 1) {
-            if (c.categoria == cat_actual) {
-                printf("nombre=%-15s dni=%-10d categoria=%-3d tiempo=%0.2f\n", c.nombre, c.dni, c.categoria, c.tiempo);
+            if (c.estado == OCUPADO && c.categoria == cat_actual) {
+                printf("\t* nombre=%-15s dni=%-10d categoria=%-3d tiempo=%0.2f\n", c.nombre, c.dni, c.categoria, c.tiempo);
+                printed = 1;
             }
         }
+        if (printed) printf(("\n"));
         cat_actual += 1;
     }
     printf("\n");
     fclose(file);
-}
-
-long int buscar_posicion(FILE *file, int dni) {
-    corredor_t c;
-    long int pos;
-
-    pos = hash(dni);
-    fseek(file, pos, SEEK_SET);
-    fread(&c, sizeof(corredor_t), 1, file);
-    if (c.estado == LIBRE)
-        return -1;
-    else {
-        while (!(c.estado == OCUPADO && c.dni == dni) && c.estado != LIBRE && ftell(file) != pos) {
-            if (feof(file))
-                fseek(file, 0L, SEEK_SET);
-            fread(&c, sizeof(corredor_t), 1, file);
-        }
-        if (c.estado == OCUPADO && c.dni == dni) {
-            return ftell(file) - (long)sizeof(corredor_t);
-        } else {
-            return -1;
-        }
-    }
 }
 
 corredor_t new_corredor(char *nombre, int dni, char sexo, int edad, int categoria, estado_t estado, float tiempo) {

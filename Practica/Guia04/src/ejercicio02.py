@@ -1,8 +1,11 @@
 #! /usr/bin/python3
 
-def main():
-    claves = ["limon", "gato", "vodka", "ojo",
-              "ojota", "caradura", "caradura", "ah"]
+def main(args):
+    if (len(args) == 1):
+        claves = ["limon", "gato", "vodka", "ojo",
+                  "ojota", "caradura", "caradura", "ah"]
+    else:
+        claves = args[1:]
 
     M = 512
     for key in claves:
@@ -16,4 +19,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    import sys
+    main(sys.argv)
