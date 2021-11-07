@@ -112,9 +112,11 @@ int main(int argc, char const *argv[]) {
     alta(filename, "cande ", 39251478, 'F', 25, 3);
     alta(filename, "guada mateos", 40251478, 'F', 24, 2);
     alta(filename, "loli ", 41251478, 'F', 22, 5);
-    alta(filename, "pepe argento", 38443617, 'M', 41, 7);
+    alta(filename, "pepe argento", 14443618, 'M', 41, 7);
     listado_tiempo_general(filename);
     // listado_tiempo_categoria(filename);
+
+    // bajas
     baja(filename, 0);
     listado_tiempo_general(filename);
     baja(filename, 0);
@@ -125,10 +127,28 @@ int main(int argc, char const *argv[]) {
     listado_tiempo_general(filename);
     baja(filename, 12006);
     listado_tiempo_general(filename);
-    alta(filename, "ultimo actualziado", 12006, 'M', 27, 1);
-    alta(filename, "ultimo otro actualziado", 24013, 'M', 27, 1);
+    alta(filename, "ultimo act", 12006, 'M', 27, 1);
+    alta(filename, "ultimo otro act", 24013, 'M', 27, 1);
     listado_tiempo_general(filename);
     baja(filename, 38443617);
+    listado_tiempo_general(filename);
+
+    // cargar tiempo
+    cargar_tiempo(filename, 12006, 12.3f);
+    cargar_tiempo(filename, 12007, 15.4f);
+    cargar_tiempo(filename, 24013, 22.3f);
+    cargar_tiempo(filename, 38443617, 369.3f);
+    listado_tiempo_general(filename);
+
+    // modificar
+    corredor_t edit1 = new_corredor("carolina", 39251478, 'F', 29, 7, OCUPADO, 33.3f);
+    corredor_t edit2 = new_corredor("florencia", 12007, 'F', 24, 7, OCUPADO, 25.3f);
+    corredor_t edit3 = new_corredor("juan cruz", 39443617, 'M', 27, 7, OCUPADO, 33.3f);
+    modificacion(filename, edit1);
+    listado_tiempo_general(filename);
+    modificacion(filename, edit2);
+    listado_tiempo_general(filename);
+    modificacion(filename, edit3);
     listado_tiempo_general(filename);
     return 0;
 }
@@ -184,28 +204,30 @@ void alta(char *filename, char *nombre, int dni, char sexo, int edad, int catego
     corredor_t reg;
 
     file = fopen(filename, "rb+");
-    pos = hash(dni);
-    fseek(file, pos, SEEK_SET);
-    fread(&reg, sizeof(corredor_t), 1, file);
-    if (reg.estado != OCUPADO) {
-        reg = new_corredor(nombre, dni, sexo, edad, categoria, OCUPADO, 0.0);
+    if (file != NULL) {
+        pos = hash(dni);
         fseek(file, pos, SEEK_SET);
-        fwrite(&reg, sizeof(corredor_t), 1, file);
-    } else {
-        while (reg.estado == OCUPADO && ftell(file) != pos) {
-            fread(&reg, sizeof(corredor_t), 1, file);
-            if (feof(file)) {
-                fseek(file, 0L, SEEK_SET);
-            }
-        }
+        fread(&reg, sizeof(corredor_t), 1, file);
         if (reg.estado != OCUPADO) {
             reg = new_corredor(nombre, dni, sexo, edad, categoria, OCUPADO, 0.0);
-            pos = ftell(file) - (long)sizeof(corredor_t);
             fseek(file, pos, SEEK_SET);
             fwrite(&reg, sizeof(corredor_t), 1, file);
+        } else {
+            while (reg.estado == OCUPADO && ftell(file) != pos) {
+                fread(&reg, sizeof(corredor_t), 1, file);
+                if (feof(file)) {
+                    fseek(file, 0L, SEEK_SET);
+                }
+            }
+            if (reg.estado != OCUPADO) {
+                reg = new_corredor(nombre, dni, sexo, edad, categoria, OCUPADO, 0.0);
+                pos = ftell(file) - (long)sizeof(corredor_t);
+                fseek(file, pos, SEEK_SET);
+                fwrite(&reg, sizeof(corredor_t), 1, file);
+            }
         }
+        fclose(file);
     }
-    fclose(file);
 }
 
 /**
@@ -220,54 +242,51 @@ void baja(char *filename, int dni) {
     corredor_t c;
 
     file = fopen(filename, "rb+");
-    pos = buscar_posicion(file, dni);
-    if (pos != -1) {
-        fseek(file, pos, SEEK_SET);
-        fread(&c, sizeof(corredor_t), 1, file);
-        c.estado = BORRADO;
-        fseek(file, pos, SEEK_SET);
-        fwrite(&c, sizeof(corredor_t), 1, file);
+    if (file != NULL) {
+        pos = buscar_posicion(file, dni);
+        if (pos != -1) {
+            fseek(file, pos, SEEK_SET);
+            fread(&c, sizeof(corredor_t), 1, file);
+            c.estado = BORRADO;
+            fseek(file, pos, SEEK_SET);
+            fwrite(&c, sizeof(corredor_t), 1, file);
+        }
+        fclose(file);
     }
-    fclose(file);
 }
 
 void modificacion(char *filename, corredor_t corredor) {
-    long pos;
     FILE *file;
+    long pos;
 
     file = fopen(filename, "rb+");
-    pos = hash(corredor.dni);
-
-    fseek(file, pos, SEEK_SET);
-    fwrite(&corredor, sizeof(corredor_t), 1, file);
-    fclose(file);
+    if (file != NULL) {
+        pos = buscar_posicion(file, corredor.dni);
+        if (pos != -1) {
+            fseek(file, pos, SEEK_SET);
+            fwrite(&corredor, sizeof(corredor_t), 1, file);
+        }
+        fclose(file);
+    }
 }
 
 void cargar_tiempo(char *filename, int dni, float tiempo) {
-    corredor_t c;
-    long pos;
     FILE *file;
-    int encontrado = 0;
+    long pos;
+    corredor_t c;
 
     file = fopen(filename, "rb+");
-    pos = hash(dni);
-    fseek(file, pos, SEEK_SET);
-    fread(&c, sizeof(corredor_t), 1, file);
-    while (!encontrado && ftell(file) != pos && c.estado != LIBRE) {
-        if (c.estado == OCUPADO && c.dni == dni) {
+    if (file != NULL) {
+        pos = buscar_posicion(file, dni);
+        if (pos != -1) {
+            fseek(file, pos, SEEK_SET);
+            fread(&c, sizeof(corredor_t), 1, file);
             c.tiempo = tiempo;
-            encontrado = 1;
+            fseek(file, pos, SEEK_SET);
+            fwrite(&c, sizeof(corredor_t), 1, file);
         }
-        if (feof(file))
-            fseek(file, 0L, SEEK_SET);
-        fread(&c, sizeof(corredor_t), 1, file);
-        if (c.estado == OCUPADO && c.dni == dni) {
-            encontrado = 1;
-        }
+        fclose(file);
     }
-    fseek(file, pos, SEEK_SET);
-    fwrite(&c, sizeof(corredor_t), 1, file);
-    fclose(file);
 }
 
 void listado_tiempo_general(char *filename) {
@@ -276,15 +295,17 @@ void listado_tiempo_general(char *filename) {
     int i;
 
     file = fopen(filename, "rb+");
-    i = 0;
-    while (fread(&c, sizeof(corredor_t), 1, file) == 1) {
-        if (c.estado == OCUPADO) {
-            printf("%8d. nombre=%-15s dni=%-10d categoria=%-3d tiempo=%0.2f\n", i, c.nombre, c.dni, c.categoria, c.tiempo);
+    if (file != NULL) {
+        i = 0;
+        while (fread(&c, sizeof(corredor_t), 1, file) == 1) {
+            if (c.estado == OCUPADO) {
+                printf("%8d. nombre=%-15s dni=%-10d categoria=%-3d tiempo=%0.2f\n", i, c.nombre, c.dni, c.categoria, c.tiempo);
+            }
+            i += 1;
         }
-        i += 1;
+        fclose(file);
+        printf("\n");
     }
-    fclose(file);
-    printf("\n");
 }
 
 void listado_tiempo_categoria(char *filename) {
@@ -294,26 +315,28 @@ void listado_tiempo_categoria(char *filename) {
     int printed = 0;
 
     file = fopen(filename, "rb");
-    while (fread(&c, sizeof(corredor_t), 1, file) == 1) {
-        if (c.estado == OCUPADO && c.categoria > max_categoria) {
-            max_categoria = c.categoria;
-        }
-    }
-    cat_actual = 1;
-    printf("Listado por Categoria:\n");
-    while (cat_actual <= max_categoria) {
-        fseek(file, 0L, SEEK_SET);
+    if (file != NULL) {
         while (fread(&c, sizeof(corredor_t), 1, file) == 1) {
-            if (c.estado == OCUPADO && c.categoria == cat_actual) {
-                printf("\t* nombre=%-15s dni=%-10d categoria=%-3d tiempo=%0.2f\n", c.nombre, c.dni, c.categoria, c.tiempo);
-                printed = 1;
+            if (c.estado == OCUPADO && c.categoria > max_categoria) {
+                max_categoria = c.categoria;
             }
         }
-        if (printed) printf(("\n"));
-        cat_actual += 1;
+        cat_actual = 1;
+        printf("Listado por Categoria:\n");
+        while (cat_actual <= max_categoria) {
+            fseek(file, 0L, SEEK_SET);
+            while (fread(&c, sizeof(corredor_t), 1, file) == 1) {
+                if (c.estado == OCUPADO && c.categoria == cat_actual) {
+                    printf("\t* nombre=%-15s dni=%-10d categoria=%-3d tiempo=%0.2f\n", c.nombre, c.dni, c.categoria, c.tiempo);
+                    printed = 1;
+                }
+            }
+            if (printed) printf(("\n"));
+            cat_actual += 1;
+        }
+        printf("\n");
+        fclose(file);
     }
-    printf("\n");
-    fclose(file);
 }
 
 corredor_t new_corredor(char *nombre, int dni, char sexo, int edad, int categoria, estado_t estado, float tiempo) {

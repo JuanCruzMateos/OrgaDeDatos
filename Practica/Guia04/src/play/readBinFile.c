@@ -46,6 +46,7 @@ int main(int argc, char const *argv[]) {
     printf("%s %d FEOF=%d\n", p.nombre, p.edad, feof(file));
     printf("FTELL=%ld\n", ftell(file));
 
+    // para que feof de true hay que leer el fin de archivo, no basta que apunte al fin
     fclose(file);
     return 0;
 }
