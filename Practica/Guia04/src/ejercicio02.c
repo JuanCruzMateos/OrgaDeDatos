@@ -75,7 +75,7 @@ void baja(char *mainfilename, char *overflowname, char *nombre, char *apellido, 
  *  Modificacion de personal.
  *  El parametro personal empaqueta toda la informacion del corredor actualizada.
  */
-void modificacion(char *filename, personal_t corredor);
+void modificar(char *mainfilename, char *overflowname, personal_t anterior, personal_t nuevo);
 
 /**
  * Devuelve un nuevo registro con los datos pasados por parametro
@@ -118,6 +118,31 @@ int main(int argc, char const *argv[]) {
     alta(mainfile, overflowfile, "pedro", "gonzales", "otro2", 154123456, "2021-11-13");
     alta(mainfile, overflowfile, "pedro", "gonzales", "otro3", 154123456, "2021-11-13");
 
+    listar(mainfile, overflowfile);
+
+    baja(mainfile, overflowfile, "lucia", "perez", "paso 1234", 154258963, "2021-03-20");
+    printf("baja = lucia perez \n");
+    listar(mainfile, overflowfile);
+    baja(mainfile, overflowfile, "pedro", "gonzales", "otro3", 154123456, "2021-11-13");
+    printf("baja = pedro gonzales otro3\n");
+    listar(mainfile, overflowfile);
+    baja(mainfile, overflowfile, "pedro", "gonzales", "falucho 1234", 154123456, "2021-11-13");
+    printf("baja = pedro gonzales falusho 1234\n");
+    listar(mainfile, overflowfile);
+
+    personal_t p1ant = new_personal("juan cruz", "mateos", "otro2", 4512154, "2021-08-15", OCUPADO, -1);
+    personal_t p1nuevo = new_personal("juan cruz", "mateos", "actualizo", 155937802, "2021-08-15", OCUPADO, -1);
+    // personal_t p2 = new_personal("maria", "lopez", "mitre 1234", 155258963, "2020-10-15", OCUPADO, -1);
+    // personal_t p5 = new_personal("pablo", "rodriguez", "matheu 1234", 1524793254, "2019-12-17", OCUPADO, -1);
+    // personal_t p6 = new_personal("sofia", "rojas", "san luis 1234", 156362514, "2021-01-02", OCUPADO, -1);
+    // personal_t p7 = new_personal("juan cruz", "mateos", "otro1", 4512154, "2021-08-15", OCUPADO, -1);
+    // personal_t p8 = new_personal("pedro", "gonzales", "otro1", 154123456, "2021-11-13", OCUPADO, -1);
+    // personal_t p9 = new_personal("juan cruz", "mateos", "otro2", 4512154, "2021-08-15", OCUPADO, -1);
+    // personal_t p10 = new_personal("pablo", "rodriguez", "otro1", 1524793254, "2019-12-17", OCUPADO, -1);
+    // personal_t p11 = new_personal("cande", "mateos", "almafuerte 1234", 15245635, "2022-08-15", OCUPADO, -1);
+    // personal_t p12 = new_personal("pedro", "gonzales", "otro2", 154123456, "2021-11-13", OCUPADO, -1);
+
+    modificar(mainfile, overflowfile, p1ant, p1nuevo);
     listar(mainfile, overflowfile);
     return 0;
 }
@@ -215,34 +240,85 @@ void alta(char *mainfilename, char *overflowname, char *nombre, char *apellido, 
  *  Baja de personal.
  */
 void baja(char *mainfilename, char *overflowname, char *nombre, char *apellido, char *direccion, int telefono, char *fechaingreso) {
-    personal_t elim = {.nombre = nombre, .apellido = apellido, .direccion = direccion, .telefono = telefono, .fechaingreso = fechaingreso};
+    personal_t elim = new_personal(nombre, apellido, direccion, telefono, fechaingreso, OCUPADO, -1);
     FILE *mainfile, *overflowfile;
-    personal_t persona, persona_overflow;
-    int pos_main, pos_ant, pos_act;
+    personal_t persona, persona_overflow, ant_over;
+    long pos_main, pos_ant, pos_act;
 
     mainfile = fopen(mainfilename, "rb+");
     if (mainfile != NULL) {
         pos_main = hash(nombre, apellido);
         fseek(mainfile, pos_main, SEEK_SET);
         fread(&persona, sizeof(personal_t), 1, mainfile);
-        if (equals(persona, elim)) {
-            persona.estado = LIBRE;
-            fseek(mainfile, pos_main, SEEK_SET);
-            fwrite(&persona, sizeof(personal_t), 1, mainfile);
-        } else {
-            overflowfile = fopen(overflowname, "rb+");
-            if (overflowname != NULL) {
-                pos_act = persona.sig;
-                fseek(overflowfile, pos_act, SEEK_SET);
-                fread(&persona_overflow, sizeof(personal_t), 1, overflowfile);
-                if (equals(persona_overflow, elim)) {
-                    if (persona_overflow.sig == -1) {
-                        
-                    } else {
-
+        if (persona.estado != LIBRE) {
+            if (equals(persona, elim)) {  // si es el primero
+                if (persona.sig == -1) {  // si es el unico
+                    persona.estado = LIBRE;
+                    fseek(mainfile, pos_main, SEEK_SET);
+                    fwrite(&persona, sizeof(personal_t), 1, mainfile);
+                } else {  // si hay mas elementos en la lista
+                    pos_ant = -1;
+                    pos_act = persona.sig;
+                    overflowfile = fopen(overflowname, "rb+");
+                    if (overflowfile != NULL) {
+                        fseek(overflowfile, pos_act, SEEK_SET);
+                        fread(&persona_overflow, sizeof(personal_t), 1, overflowfile);
+                        while (persona_overflow.sig != -1) {
+                            pos_ant = pos_act;
+                            pos_act = persona_overflow.sig;
+                            fseek(overflowfile, pos_act, SEEK_SET);
+                            fread(&persona_overflow, sizeof(personal_t), 1, overflowfile);
+                        }
+                        persona_overflow.sig = persona.sig;  // ultimo -> primro
+                        fseek(mainfile, pos_main, SEEK_SET);
+                        fwrite(&persona_overflow, sizeof(personal_t), 1, mainfile);  // escribo el ultimo en primero
+                        persona_overflow.estado = LIBRE;                             // marco ultimo como libre
+                        fseek(overflowfile, pos_act, SEEK_SET);
+                        fwrite(&persona_overflow, sizeof(personal_t), 1, overflowfile);
+                        if (pos_ant != -1) {
+                            fseek(overflowfile, pos_ant, SEEK_SET);
+                            fread(&persona_overflow, sizeof(personal_t), 1, overflowfile);
+                            persona_overflow.sig = -1;
+                            fseek(overflowfile, pos_ant, SEEK_SET);
+                            fwrite(&persona_overflow, sizeof(personal_t), 1, overflowfile);
+                        }
+                        fclose(overflowfile);
                     }
                 }
-                fclose(overflowfile);
+            } else {  // si no es el primer elemento
+                overflowfile = fopen(overflowname, "rb+");
+                if (overflowname != NULL) {
+                    pos_ant = -1;
+                    pos_act = persona.sig;
+                    fseek(overflowfile, pos_act, SEEK_SET);
+                    fread(&persona_overflow, sizeof(personal_t), 1, overflowfile);
+                    while (!equals(persona_overflow, elim) && persona_overflow.sig != -1) {
+                        pos_ant = pos_act;
+                        pos_act = persona_overflow.sig;
+                        fseek(overflowfile, pos_act, SEEK_SET);
+                        fread(&persona_overflow, sizeof(personal_t), 1, overflowfile);
+                    }
+                    if (equals(persona_overflow, elim)) {
+                        if (pos_ant == -1) {
+                            persona_overflow.estado = LIBRE;
+                            fseek(overflowfile, pos_act, SEEK_SET);
+                            fwrite(&persona_overflow, sizeof(personal_t), 1, overflowfile);
+                            persona.sig = -1;
+                            fseek(overflowfile, pos_main, SEEK_SET);
+                            fwrite(&persona, sizeof(personal_t), 1, overflowfile);
+                        } else {
+                            fseek(overflowfile, pos_ant, SEEK_SET);
+                            fread(&ant_over, sizeof(personal_t), 1, overflowfile);
+                            ant_over.sig = persona_overflow.sig;
+                            fseek(overflowfile, pos_ant, SEEK_SET);
+                            fwrite(&ant_over, sizeof(personal_t), 1, overflowfile);
+                            persona_overflow.estado = LIBRE;
+                            fseek(overflowfile, pos_act, SEEK_SET);
+                            fwrite(&persona_overflow, sizeof(personal_t), 1, overflowfile);
+                        }
+                    }
+                    fclose(overflowfile);
+                }
             }
         }
         fclose(mainfile);
@@ -251,9 +327,57 @@ void baja(char *mainfilename, char *overflowname, char *nombre, char *apellido, 
 
 /**
  *  Modificacion de personal.
- *  El parametro personal empaqueta toda la informacion del corredor actualizada.
  */
-void modificacion(char *filename, personal_t corredor);
+void modificar(char *mainfilename, char *overflowname, personal_t anterior, personal_t nuevo) {
+    FILE *mainfile, *overflowfile;
+    personal_t p;
+    long pos;
+
+    mainfile = fopen(mainfilename, "rb+");
+    if (mainfile != NULL) {
+        pos = hash(anterior.nombre, anterior.apellido);
+        fseek(mainfile, pos, SEEK_SET);
+        fread(&p, sizeof(personal_t), 1, mainfile);
+        if (equals(p, anterior)) {
+            if (strcmp(anterior.nombre, nuevo.nombre) != 0 || strcmp(anterior.apellido, nuevo.apellido) != 0) {
+                baja(mainfilename, overflowname, anterior.nombre, anterior.apellido, anterior.direccion, anterior.telefono, anterior.fechaingreso);
+                alta(mainfilename, overflowname, nuevo.nombre, nuevo.apellido, nuevo.direccion, nuevo.telefono, nuevo.fechaingreso);
+            } else {
+                strcpy(p.direccion, nuevo.direccion);
+                p.telefono = nuevo.telefono;
+                strcpy(p.fechaingreso, nuevo.fechaingreso);
+                fseek(mainfile, pos, SEEK_SET);
+                fwrite(&p, sizeof(personal_t), 1, mainfile);
+            }
+        } else {
+            overflowfile = fopen(overflowname, "rb+");
+            if (overflowfile != NULL) {
+                pos = p.sig;
+                fseek(overflowfile, p.sig, SEEK_SET);
+                fread(&p, sizeof(personal_t), 1, overflowfile);
+                while (!equals(p, anterior) && p.sig != -1) {
+                    pos = p.sig;
+                    fseek(overflowfile, pos, SEEK_SET);
+                    fread(&p, sizeof(personal_t), 1, overflowfile);
+                }
+                if (equals(p, anterior)) {
+                    if (strcmp(anterior.nombre, nuevo.nombre) != 0 || strcmp(anterior.apellido, nuevo.apellido) != 0) {
+                        baja(mainfilename, overflowname, anterior.nombre, anterior.apellido, anterior.direccion, anterior.telefono, anterior.fechaingreso);
+                        alta(mainfilename, overflowname, nuevo.nombre, nuevo.apellido, nuevo.direccion, nuevo.telefono, nuevo.fechaingreso);
+                    } else {
+                        strcpy(p.direccion, nuevo.direccion);
+                        p.telefono = nuevo.telefono;
+                        strcpy(p.fechaingreso, nuevo.fechaingreso);
+                        fseek(overflowfile, pos, SEEK_SET);
+                        fwrite(&p, sizeof(personal_t), 1, overflowfile);
+                    }
+                }
+                fclose(overflowfile);
+            }
+        }
+        fclose(mainfile);
+    }
+}
 
 personal_t new_personal(char *nombre, char *apellido, char *direccion, int telefono, char *fechaingreso, estado_t estado, long sig) {
     personal_t p;
@@ -273,7 +397,7 @@ int equals(personal_t this, personal_t that) {
 
     iguales &= strcmp(this.nombre, that.nombre) == 0 ? 1 : 0;
     iguales &= strcmp(this.apellido, that.apellido) == 0 ? 1 : 0;
-    iguales &= strcmp(this.direccion, that.direccion == 0 ? 1 : 0;
+    iguales &= strcmp(this.direccion, that.direccion) == 0 ? 1 : 0;
     iguales &= (this.telefono == that.telefono);
     iguales &= strcmp(this.fechaingreso, that.fechaingreso) == 0 ? 1 : 0;
     return iguales;
@@ -307,4 +431,5 @@ void listar(char *mainfilename, char *overflowname) {
         }
         fclose(overflow);
     }
+    printf("\n");
 }
