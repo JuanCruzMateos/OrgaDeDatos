@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1636399648 source:/home/juan/Documents/Ingenieria/OrgaDeDatos/Practica/Guia04/Ejercicio02/main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+

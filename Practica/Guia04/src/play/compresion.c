@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-char *toBin(int num) {
+char *toBinaryString(int num) {
     char *bin;
     char arr[30];
     int i = 0;
@@ -28,10 +28,10 @@ int main(int argc, char const *argv[]) {
         for (int i = 1; i < argc; i++) {
             printf("%s\n", argv[i]);
             xor = argv[i][0];
-            printf("%c = %s\n", argv[i][0], toBin(argv[i][0]));
+            printf("%c = %s\n", argv[i][0], toBinaryString(argv[i][0]));
             for (int j = 1; j < strlen(argv[i]); j++) {
                 xor ^= argv[i][j];
-                printf("%c = %s\n", argv[i][j], toBin(argv[i][j]));
+                printf("%c = %s\n", argv[i][j], toBinaryString(argv[i][j]));
             }
             printf("xor %% %d = %d\n\n", M, xor % M);
         }

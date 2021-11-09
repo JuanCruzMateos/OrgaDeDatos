@@ -9,40 +9,40 @@
 
 /**
  *  Ejercicio de programacion 2:
- *  Suponga un sistema para el manejo de personal de una empresa. 
- *  Los datos a almacenar son 
+ *  Suponga un sistema para el manejo de personal de una empresa.
+ *  Los datos a almacenar son
  *      - apellido y
- *      - nombre, 
- *      - dirección, 
- *      - teléfono, y 
+ *      - nombre,
+ *      - dirección,
+ *      - teléfono, y
  *      - fecha de ingreso.
  *  Para la solución se plantea un archivo directo donde el apellido y nombre es la clave de acceso.
- *  
- *  >>> Implemente una función hash, creación de archivo principal, alta, modificaciones, bajas. 
+ *
+ *  >>> Implemente una función hash, creación de archivo principal, alta, modificaciones, bajas.
  *  >>> El manejo de colisiones se debe resolver por área separada de overflow.
- * 
+ *
  * Resolucion:
  *  > Como no se indica el tamaño del archivo, y al ser para manerar el personal de una empresa, supongo que
  *    se trata de una empresa grande que dispone de una gran cantidad de empleados, por lo que el archivo debera
  *    manejar una gran cantidad de registros. Por lo tanto, elijo un tamaño de archivo y un espacio de direcciones
  *    de 12007 posiciones, tanto para el archivo principal como para el area separada de overflow.
- * 
+ *
  * > Dada la libertad del enuncido, hago coincidir el tamaño del archivo con el espacio de direcciones, fijandolo
  *   en el numero primo 12007 a fin de asegurar un tamaño lo suficientemente grande para el archivo al igual que un
  *   numero primo capaz de asegurar una mejor distribucion de las claves.
  *   De esta manera el archivo constara de 12007 registros estando el espacio de direcciones en el intervalo [0, 12006]
- * 
+ *
  * > La funcion de hashing se implementa utilizando el metodo de la compresion:
  *     * se toma cada caracter del nombre y apellido
  *     * se transforma a binario
  *     * se aplica la operacion XOR
  *     * al resultado se le aplica el modulo del espacio de direcciones (resultado % 12007)
- * 
+ *
  * > OBS: dado que puede existir la posibilidad de que existan dos empleados con el mismo nombre y apellido,
  *        utilido el campo telefono como identificador adicional a fin de distinguirlos.
  *        Luego, la funcion hash(nombre, apellido) dara la ubicacion en el archivo principal segun sea el valor
  *        de nombre y apellido, y el registro quedara univocamente identificado por los campos nombre, apellido y telefono
- *        
+ *
  *        Como alternativa al telefono tambien podria usarse el campo direccion, pero no fechaingreso ya que podria
  *        ocurrir que dos personas con el mismo nombre y apellido ingresen el mismo dia. (Si bien es poco probable
  *        que ocurra, aun asi es posible por lo que debe ser contemplado en el diseño.)
@@ -104,7 +104,7 @@ void baja(char *mainfilename, char *overflowname, char *nombre, char *apellido, 
 
 /**
  *  Modificacion de personal.
- *  Si lo que se desea actualizar es el nombre o el apellido, se da de baja al registro actual y se da uno nuevo de 
+ *  Si lo que se desea actualizar es el nombre o el apellido, se da de baja al registro actual y se da uno nuevo de
  *  alta, sino se modifican los campos unicamente.
  * @param mainfilename nombre del archivo principal
  * @param overflowname nombre del archivo overflow
@@ -133,8 +133,8 @@ void listar(char *mainfilename, char *overflowname);
 int equals(char *nombre1, char *nombre2, char *apellido1, char *apellido2, int telefono1, int telefono2);
 
 int main(int argc, char const *argv[]) {
-    char *mainfile = "./dat/personal.dat";
-    char *overflowfile = "./dat/personaloverflow.dat";
+    char *mainfile = "personal.dat";
+    char *overflowfile = "personaloverflow.dat";
 
     // inicializo los archivos
     init_file(mainfile, overflowfile);
@@ -361,8 +361,8 @@ void baja(char *mainfilename, char *overflowname, char *nombre, char *apellido, 
                             fseek(overflowfile, pos_act, SEEK_SET);
                             fwrite(&persona_overflow, sizeof(personal_t), 1, overflowfile);
                             persona.sig = -1;
-                            fseek(mainfile, pos_main, SEEK_SET);
-                            fwrite(&persona, sizeof(personal_t), 1, mainfile);
+                            fseek(overflowfile, pos_main, SEEK_SET);
+                            fwrite(&persona, sizeof(personal_t), 1, overflowfile);
                         } else {
                             fseek(overflowfile, pos_ant, SEEK_SET);
                             fread(&ant_over, sizeof(personal_t), 1, overflowfile);

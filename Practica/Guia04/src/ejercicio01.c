@@ -9,18 +9,37 @@
 
 /**
  *  Ejercicio de programacion 1.
- *  nota: todo el codigo esta en un unico archivo a fin reducir el numero de archivos a enviar.
- */
-
-/**
- * Espacio de direcciones.
- * Funcion de hash: metodo de modulo.
- * Ya que se quieren guardar 12000 registros elijo el numero primo mas cercano a ese valor, que es 12007.
- * De esta manera, el archivo quedara 12000/12007 = 99.9% completo
+ * 1) Suponga un sistema para la gestión de una maratón de 42Km. 
+ * El cupo máximo es de 12000 corredores. 
+ * En la inscripción cada corredor provee: 
+ *          > número de DNI, 
+ *          > nombre, 
+ *          > sexo, 
+ *          > edad, 
+ *          > categoría. 
+ *          > Hay un último campo que es el tiempo (que se carga al finalizar la carrera).
  * 
- * El espacio de direcciones estara luego en el intervalo [0, 12006]
+ * Para la solución se deberá usar un archivo directo, donde deberá diseñar una función hash que mapee 
+ * número de DNI a posición en el archivo (que es el número de corredor otorgado en el momento de la inscripción).
+ * 
+ * Implemente: función hash, archivo, altas, modificaciones, bajas. Carga de tiempos. Listados de tiempos general y por categoría.
+ * ¿Es eficiente esta solución al momento de imprimir los listados de clasificaciones generales y por categorías?
+ *  ¿Usaría la misma solución si la toma de tiempo se hace de forma electrónica con sensores tipo RFID en la largada, media maratón (km 21) y final (Km 42)? ¿Qué cambiaría?
+ * 
+ * Resolucion:
+ *  > Tamaño del archivo :: 12000 registros -> [0..11999]
+ * 
+ *  > Funcion de hash: metodo de modulo.
+ *      Ya que se quieren guardar 12000 registros elijo el numero primo mas cercano a ese valor, que es 12007.
+ *      El espacio de direcciones estara luego en el intervalo [0, 12006]
+ *      Si al aplicar la funcion hash el valor obtenido es >= 12000, como no existe una posicion valida dentro
+ *      del archivo, al valor obtenido le resto 12000 para asi obtener un numero en el intervalo [0, 6], es decir
+ *      redirecciono a las primeras posiciones del archivo.
+ * 
+ *  > Colisiones: se resuelven mediante el metodo de Progresive Overflow (sondeo lineal)
  */
 #define ADDRSPACE_SIZE 12007
+#define MAX_REGISTROS_FILE 12000
 
 #define LEN_NOMBRE 25
 
@@ -119,10 +138,10 @@ int main(int argc, char const *argv[]) {
     // bajas
     baja(filename, 0);
     listado_tiempo_general(filename);
-    baja(filename, 0);
-    listado_tiempo_general(filename);
-    baja(filename, 2);
-    listado_tiempo_general(filename);
+    // baja(filename, 0);
+    // listado_tiempo_general(filename);
+    // baja(filename, 2);
+    // listado_tiempo_general(filename);
     baja(filename, 24013);
     listado_tiempo_general(filename);
     baja(filename, 12006);
@@ -157,14 +176,18 @@ void init_file(char *filename) {
     FILE *file = fopen(filename, "wb");
     corredor_t corredor = {.estado = LIBRE};
 
-    for (int i = 0; i < ADDRSPACE_SIZE; i++) {
+    for (int i = 0; i < MAX_REGISTROS_FILE; i++) {
         fwrite(&corredor, sizeof(corredor_t), 1, file);
     }
     fclose(file);
 }
 
 long hash(int dni) {
-    return (long)sizeof(corredor_t) * (dni % ADDRSPACE_SIZE);
+    long h = dni % ADDRSPACE_SIZE;
+
+    if (h >= 12000)
+        h -= 12000;
+    return (long)sizeof(corredor_t) * h;
 }
 
 /**
