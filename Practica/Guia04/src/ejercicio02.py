@@ -1,13 +1,17 @@
 #! /usr/bin/python3
+# Juan Cruz Mateos
+from sys import argv
+
 
 def main(args):
     if (len(args) == 1):
         claves = ["limon", "gato", "vodka", "ojo",
                   "ojota", "caradura", "caradura", "ah"]
+        M = 509
     else:
-        claves = args[1:]
+        M = int(argv[1])
+        claves = args[2:]
 
-    M = 509
     for key in claves:
         print(f"clave = {key}")
         xor = ord(key[0])

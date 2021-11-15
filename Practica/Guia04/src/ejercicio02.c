@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Juan Cruz Mateos
+
 /**
  *  Compilacion:
  *  $ gcc -g -Wall -Wconversion -Wtype-limits -pedantic -Werror -o ejercicio02 ejercicio02.c
