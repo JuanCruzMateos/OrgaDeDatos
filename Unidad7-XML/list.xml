@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="no"?>
+<!DOCTYPE List SYSTEM "list.dtd">
+
+<List>
+    <Item>Paris</Item>
+    <Item color="rojo">Madrid</Item>
+    <Item id="pepito">MarDel</Item>
+    <Separator />
+</List>

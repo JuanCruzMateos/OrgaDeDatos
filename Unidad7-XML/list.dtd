@@ -1,0 +1,7 @@
+<!ELEMENT List (Item+, Separator+)>
+<!ELEMENT Item (#PCDATA)>
+<!ATTLIST Item
+    id CDATA #IMPLIED
+    color CDATA #IMPLIED
+>
+<!ELEMENT Separator EMPTY>

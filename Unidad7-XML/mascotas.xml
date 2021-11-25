@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE mascotas [
+    <!--ELEMENT element-name (contenido)-->
+    <!ELEMENT mascotas (perro*, gato*)>
+    <!ELEMENT perro (nombre, edad)>
+    <!-- ATTLIST element-name attribute-name TIPO #VALPRED -->
+    <!ATTLIST perro sexo (macho | hembra) #REQUIRED>
+    <!ELEMENT gato (nombre, edad)>
+    <!ATTLIST gato sexo CDATA #REQUIRED>
+    <!ELEMENT nombre (#PCDATA)>
+    <!ELEMENT edad (#PCDATA)>
+]>
+
+<!-- OBS-->
+<!-- Los atributos no pueden contener subelementos ni subatributos-->
+<!-- Los atributos no tiene jerarquia-->
+<!-- Los atributos seran una mera modificacion a los elementos a que se aplica la info del archivo 
+     debe ser de poca entidad sencilla y sin estructura -->
+<mascotas>
+    <!-- recordar que el orden importa (perro*, gato*)-> primero todos los perros y despues todos los gatos -->
+    <perro sexo="macho">
+        <nombre>Milo</nombre>
+        <edad>12</edad>
+    </perro>
+    <perro sexo="hembra">
+        <nombre>Shakie</nombre>
+        <edad>8</edad>
+    </perro>
+    <gato sexo="hembra">
+        <nombre>Emma</nombre>
+        <edad>8</edad>
+    </gato>
+</mascotas>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- DOCTYPE persona: root element es persona-->
+<!DOCTYPE persona [
+    <!-- element persona must contain the elements nombre, apellido :: Anidamiento-->
+    <!ELEMENT persona (nombre, apellido)>
+    <!-- <!ELEMENT persona (apellido, nombre)> ERROR: el orden importa-->
+    <!-- defino el atributo sexo en el elemento persona haciendolo obligatorio-->
+    <!ATTLIST persona sexo CDATA #REQUIRED>
+    <!-- tipo del elementod #PCDATA-->
+    <!ELEMENT nombre (#PCDATA)>
+    <!ELEMENT apellido (#PCDATA)>
+]>
+
+<persona sexo="masculino">
+    <nombre>Juan Cruz</nombre>
+    <apellido>Mateos</apellido>
+</persona>
