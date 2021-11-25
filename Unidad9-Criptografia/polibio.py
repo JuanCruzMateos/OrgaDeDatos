@@ -1,13 +1,17 @@
+#! /usr/bin/python3
+
 def encode(dic: dict, msg: str) -> str:
     encodemsg = ""
     for char in msg:
-        encodemsg += dic[char]
+        encodemsg += dic[char] if char != " " else " "
     return encodemsg
 
 
 def decode(dic: dict, msg: str) -> str:
     original = ""
-    splittedmdg = [msg[i:i+2] for i in range(0, len(msg), 2)]
+    nospaces = msg.split(" ")
+    splittedmdg = [msg[i:i+2]
+                   for msg in nospaces for i in range(0, len(msg), 2)]
     for i in splittedmdg:
         original += dic[i]
     return original
@@ -26,10 +30,12 @@ def main():
             if i % 10 == 5:
                 i += 5
 
-    msg = input("msg = ")
-    encodedmsg = encode(codedict, msg)
-    print(encodedmsg)
-    originalmsg = decode(decodedict, encodedmsg)
+    # msg = "todos usamos linux"
+    # encodedmsg = encode(codedict, msg)
+    # print(encodedmsg)
+
+    enc_msg = "1434143443 454311323443 3124334553"
+    originalmsg = decode(decodedict, enc_msg)
     print(originalmsg)
 
 
