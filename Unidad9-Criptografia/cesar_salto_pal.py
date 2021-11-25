@@ -6,7 +6,7 @@ from string import ascii_lowercase
 def encriptar(alpha: str, valor_letra: dict, letra_valor: dict, p_key: str, salto: int, msg: str) -> str:
     p_clave_sin_dup = ''.join(
         sorted(set(p_key), key=p_key.index))
-
+    print(p_clave_sin_dup)
     dic = {}
     for i, c in enumerate(p_clave_sin_dup):
         dic[letra_valor[salto + i]] = c
@@ -32,10 +32,10 @@ def main():
     valor_letra = dict(zip(alpha, range(len(alpha))))
     letra_valor = dict(zip(range(len(alpha)), alpha))
 
-    palabra_clave = "amor"
-    salto = 8
-    mensajes = ["lo esencial es invisible a los ojos",
-                "la g de gnu hace a la definicion recursiva"]
+    palabra_clave = "adonai"
+    salto = 6
+    mensajes = ["para avanzar es necesario tener un objetivo",
+                "gnu la maldita g hace a la definicion reursiva"]
     for msg in mensajes:
         e = encriptar(alpha, valor_letra, letra_valor,
                       palabra_clave, salto, msg)

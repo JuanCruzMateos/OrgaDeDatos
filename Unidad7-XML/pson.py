@@ -10,7 +10,7 @@ def main():
         "loli": 23
     }
 
-    print("d", d)
+    print("d dict", d)
 
     # convert into JSON
     djson = json.dumps(d)
@@ -18,8 +18,8 @@ def main():
     # parse json to dict
     d_again = json.loads(djson)
 
-    print("djson", djson)
-    print("d_again", d_again)
+    print("d json", djson)
+    print("d again", d_again)
 
 
 if __name__ == "__main__":

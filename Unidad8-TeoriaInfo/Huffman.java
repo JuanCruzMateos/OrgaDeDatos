@@ -7,9 +7,16 @@ public class Huffman {
     protected String msgToEncode;
     protected Nodo root;
 
+    public static String printable(String c) {
+        if (c.equals(" ")) {
+            return "' '";
+        }
+        return c;
+    }
+
     public static void main(String[] args) {
         Huffman h = new Huffman();
-        String msg = "BCAADDDCCACACAC";
+        String msg = "LA VIDA ES BELLA";
 
         h.analizeInput(msg);
         h.generarArbolCodificacion();
@@ -77,7 +84,8 @@ public class Huffman {
         StringBuilder huff = new StringBuilder();
         huff.append("Huffman Codes").append("\n");
         for (String s : this.huffcodes.keySet()) {
-            huff.append(String.format("word=%s, code=%s\n", s, this.huffcodes.get(s)));
+            huff.append(String.format("word=%s, frec=%d, code=%s\n", Huffman.printable(s), this.frec.get(s),
+                    this.huffcodes.get(s)));
         }
         return huff.toString();
     }

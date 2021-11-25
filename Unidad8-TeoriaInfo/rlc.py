@@ -6,16 +6,18 @@
 # Su principal ventaja radica en que RLE se puede usar aun cuando no se pueda analizar el texto o imagen completa a enviar
 
 def main():
-    msg = "bAAAAAAAAghhh"
+    msg = "PPPPLLDPPPPPPTTTTTT"
 
     frec = 1
     for i in range(len(msg) - 1):
         if msg[i] == msg[i+1]:
             frec += 1
         else:
-            print(f"{msg[i]}{frec}", end="")
+            # print(f"{msg[i]}{frec}", end="")
+            print(f"{frec}{msg[i]}", end="")
             frec = 1
-    print(f"{msg[i+1]}{frec}")
+    # print(f"{msg[i+1]}{frec}")
+    print(f"{frec}{msg[i+1]}")
 
 
 if __name__ == "__main__":

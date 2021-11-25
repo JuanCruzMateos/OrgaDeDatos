@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tomaTemperaturas [
+    <!ELEMENT tomaTemperaturas (temperatura*)>
+    <!ELEMENT temperatura (fecha, bariloche, pinamar)>
+    <!ELEMENT fecha (#PCDATA)>
+    <!ELEMENT bariloche (#PCDATA)>
+    <!ELEMENT pinamar (#PCDATA)>
+]>
+
+<tomaTemperaturas>
+    <temperatura>
+        <fecha>01-11-2021</fecha>
+        <bariloche>16</bariloche>
+        <pinamar>20</pinamar>
+    </temperatura>
+    <temperatura>
+        <fecha>02-11-2021</fecha>
+        <bariloche>15</bariloche>
+        <pinamar>17</pinamar>
+    </temperatura>
+    <temperatura>
+        <fecha>03-11-2021</fecha>
+        <bariloche>16</bariloche>
+        <pinamar>19</pinamar>
+    </temperatura>
+    <temperatura>
+        <fecha>04-11-2021</fecha>
+        <bariloche>17</bariloche>
+        <pinamar>21</pinamar>
+    </temperatura>
+</tomaTemperaturas>
