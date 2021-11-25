@@ -1,7 +1,16 @@
 #! /usr/bin/python3
-
 from string import ascii_lowercase
 from pprint import pprint
+
+
+def encriptar(alpha: list, shift: int, msg: str) -> str:
+    values = alpha[shift:] + alpha[:shift]
+    dic = dict(zip(alpha, values))
+
+    encript = ""
+    for char in msg:
+        encript += " " if char == " " else dic[char]
+    return encript
 
 
 def main():
@@ -9,13 +18,16 @@ def main():
     alpha.insert(14, "ñ")
 
     shift = 15
-    values = alpha[shift:] + alpha[:shift]
-    dic = dict(zip(alpha, values))
-
     msg = "pedro"
-    for char in msg:
-        print(dic[char], end="")
-    print()
+
+    # values = alpha[shift:] + alpha[:shift]
+    # dic = dict(zip(alpha, values))
+
+    # for char in msg:
+    #     print(dic[char], end="")
+    # print()
+
+    print(encriptar(alpha, shift, msg))
 
 
 if __name__ == "__main__":
