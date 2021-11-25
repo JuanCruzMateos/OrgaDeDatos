@@ -18,6 +18,10 @@ public class Huffman {
         System.out.println("Encoded msg = " + h.getEncodedMsg());
     }
 
+    public void setProb(TreeMap<String, Double> prob) {
+        this.prob = prob;
+    }
+
     public void analizeInput(String msg) {
         this.msgToEncode = msg;
         for (int i = 0; i < msg.length(); i++) {
