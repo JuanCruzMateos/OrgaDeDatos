@@ -1,64 +1,64 @@
 #! /usr/bin/python3
-# from pprint import pprint
+from pprint import pprint
+from string import ascii_lowercase
 
-def encriptar(msg: str, salto: int, palabra_clave: str, enie: bool = False) -> str:
-    a = ord("a")
-    strip_keyword = ''.join(
-        sorted(set(palabra_clave), key=palabra_clave.index))
-    inicio = a + salto
 
-    i = 0
+def encriptar(alpha: str, valor_letra: dict, letra_valor: dict, p_key: str, salto: int, msg: str) -> str:
+    p_clave_sin_dup = ''.join(
+        sorted(set(p_key), key=p_key.index))
+
     dic = {}
-    for c in strip_keyword:
-        dic[chr(inicio+i)] = c
-        i += 1
+    for i, c in enumerate(p_clave_sin_dup):
+        dic[letra_valor[salto + i]] = c
 
-    init = inicio + i
-    for c in range(ord("a"), ord("z") + 1):
-        if chr(c) not in strip_keyword:
-            if init > ord("z"):
-                init = ord("a")
-            dic[chr(init)] = chr(c)
-            init += 1
+    pos = salto+i+1
+    for _, char in enumerate(alpha):
+        if char not in dic.values():
+            if pos == len(alpha):
+                pos = 0
+            dic[letra_valor[pos]] = char
+            pos += 1
 
-    encriptado = ""
-    for c in msg:
-        encriptado += " " if c == " " else dic[c]
-    return encriptado
+    encrip = ""
+    for char in msg:
+        encrip += " " if char == " " else dic[char]
+    return encrip
 
 
 def main():
-    palabra_clave = input("palabra clave: ")
-    salto = int(input("salto: "))
+    alpha = [char for char in ascii_lowercase]
+    alpha.insert(14, "ñ")
 
-    a = ord("a")
-    p_clave_sin_dup = ''.join(
-        sorted(set(palabra_clave), key=palabra_clave.index))
-    inicio = a + salto
+    valor_letra = dict(zip(alpha, range(len(alpha))))
+    letra_valor = dict(zip(range(len(alpha)), alpha))
 
-    print(p_clave_sin_dup)
+    palabra_clave = "amor"
+    salto = 8
+    mensajes = ["lo esencial es invisible a los ojos",
+                "la g de gnu hace a la definicion recursiva"]
+    for msg in mensajes:
+        e = encriptar(alpha, valor_letra, letra_valor,
+                      palabra_clave, salto, msg)
+        print(e.upper())
 
-    dic = {}
+    # p_clave_sin_dup = ''.join(
+    #     sorted(set(palabra_clave), key=palabra_clave.index))
+    # print(p_clave_sin_dup)
 
-    i = 0
-    for c in p_clave_sin_dup:
-        dic[chr(inicio+i)] = c
-        i += 1
+    # dic = {}
+    # for i, c in enumerate(p_clave_sin_dup):
+    #     dic[letra_valor[salto + i]] = c
 
-    init = inicio+i
-    for c in range(ord("a"), ord("z") + 1):
-        if chr(c) not in p_clave_sin_dup:
-            if init > ord("z"):
-                init = ord("a")
-            dic[chr(init)] = chr(c)
-            init += 1
+    # pos = salto+i+1
+    # for _, char in enumerate(alpha):
+    #     if char not in dic.values():
+    #         if pos == len(alpha):
+    #             pos = 0
+    #         dic[letra_valor[pos]] = char
+    #         pos += 1
 
-    # pprint(dic)
-
-    msg = input("msg = ")
-    for c in msg:
-        print(dic[c], end="")
-    print()
+    # for c in alpha:
+    #     print(c, dic[c])
 
 
 if __name__ == "__main__":
