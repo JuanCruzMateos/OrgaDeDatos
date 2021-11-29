@@ -21,7 +21,8 @@ def main(args):
             binary = bin(ord(char)).replace("0b", "")
             print(f"{char}: {binary}")
             xor = xor ^ ord(char)
-        print(f"xor mod {M} = {xor % M}", end="\n\n")
+        print(f"xor = {xor}")
+        print(f"{xor} mod {M} = {xor % M}", end="\n\n")
 
 
 if __name__ == "__main__":

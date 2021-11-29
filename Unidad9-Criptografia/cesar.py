@@ -2,6 +2,7 @@
 from string import ascii_lowercase
 from string import ascii_uppercase
 from pprint import pprint
+import string
 
 
 def encriptar(alpha: list, shift: int, msg: str) -> str:
@@ -33,6 +34,7 @@ def main():
     complete.append(",")
     complete.append(".")
     # pprint(complete)
+    # print(string.digits)
     shift = 7
     msg = "En general, los hombres juzgan más por los ojos que por la inteligencia, pues todos pueden ver, pero pocos comprenden lo que ven."
 
