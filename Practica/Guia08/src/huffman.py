@@ -1,4 +1,5 @@
 #! /usr/bin/python3
+# @author Juan Cruz Mateos
 from pprint import pprint
 
 
@@ -41,7 +42,7 @@ def create_tree(prob: dict) -> Nodo:
         # print(*minHeap)
         hijoIzq = minHeap.pop(0)
         hijoDer = minHeap.pop(0)
-        print(hijoIzq.simb, hijoIzq.prob, hijoDer.simb, hijoDer.prob)
+        # print(hijoIzq.simb, hijoIzq.prob, hijoDer.simb, hijoDer.prob)
         padre = Nodo(None, hijoIzq.prob + hijoDer.prob, hijoIzq, hijoDer)
         minHeap.append(padre)
     return minHeap.pop()
@@ -55,10 +56,17 @@ def encode(code: dict, nodo: Nodo, huff: str = ""):
         encode(code, nodo.der, huff + "1")
 
 
+def printable(c: str) -> str:
+    if not c.isalpha():
+        return "' '"
+    return c
+
+
 def print_codes(huff_codes: dict):
-    print("%^10s|%^10s" % ("simb", "huffman"))
+    print(f"{'simb':^10s}|{'huffman':^10s}")
+    print('-' * 21)
     for simb, code in huff_codes.items():
-        print(f"{simb:^10s}|{code:^10s}")
+        print(f"{printable(simb):^10s}|{code:^10s}")
 
 
 def main():
@@ -68,13 +76,15 @@ def main():
     frecuencias = calc_frecuencies(string)
     # pprint(frecuencias)
     # s = sorted(frecuencias.items(), key=lambda item: item[1], reverse=True)
-    # print(s)
+    # pprint(s)
     probabilidades = calc_probabilities(frecuencias)
     # pprint(probabilidades)
+    # p = sorted(probabilidades.items(), key=lambda item: item[1], reverse=True)
+    # pprint(p)
     # # prob = {"s1": 0.6, "s2": 0.2, "s3": 0.1, "s4": 0.1}
     root = create_tree(probabilidades)
-    # encode(huff_codes, root)
-    # print_codes(huff_codes)
+    encode(huff_codes, root)
+    print_codes(huff_codes)
 
 
 if __name__ == "__main__":

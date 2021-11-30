@@ -1,5 +1,11 @@
-import java.util.*;
+import java.util.TreeMap;
+import java.util.PriorityQueue;
 
+/**
+ * @author Juan Cruz Mateos
+ *         TODO: revisar porque da distintinto a huffman.py -> ordenamiento en
+ *         pq
+ */
 public class Huffman {
     protected TreeMap<String, Integer> frec = new TreeMap<>();
     protected TreeMap<String, Double> prob = new TreeMap<>();
@@ -15,10 +21,10 @@ public class Huffman {
     }
 
     public static void main(String[] args) {
-        Huffman h = new Huffman();
+        Huffman huffman = new Huffman();
         String msg = "CALIDO AMANECER SOLEADO";
 
-        h.analizeInput(msg);
+        huffman.analizeInput(msg);
 
         // TreeMap<String, Double> p = new TreeMap<>();
         // p.put("s1", 0.6);
@@ -26,9 +32,9 @@ public class Huffman {
         // p.put("s3", 0.1);
         // p.put("s4", 0.1);
         // h.setProb(p);
-        h.generarArbolCodificacion();
-        // h.generarCodigos();
-        // System.out.println(h);
+        huffman.generarArbolCodificacion();
+        huffman.generarCodigos();
+        System.out.println(huffman);
         // System.out.println("Encoded msg = " + h.getEncodedMsg());
     }
 
@@ -59,7 +65,8 @@ public class Huffman {
         while (pq.size() > 1) {
             hijoIzq = pq.poll();
             hijoDer = pq.poll();
-            System.out.println(hijoIzq.simb + " " + hijoIzq.prob + ", " + hijoDer.simb + " " + hijoDer.prob);
+            // System.out.println(hijoIzq.simb + " " + hijoIzq.prob + ", " + hijoDer.simb +
+            // " " + hijoDer.prob);
             padre = new Nodo(null, hijoIzq.prob + hijoDer.prob, hijoIzq, hijoDer);
             pq.add(padre);
         }
