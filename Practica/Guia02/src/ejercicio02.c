@@ -4,6 +4,11 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+/**
+ * @author Juan Cruz Mateos
+ * @matricula 15134
+ */
+
 #define FMT_OBS 100
 
 typedef struct examen {
@@ -18,12 +23,12 @@ typedef struct examen {
 } examen_t;
 
 /**
- * 
+ *
  *  Identificadores:
  *      - cod_asig
  *      - legajo
  *      - nota
- * 
+ *
  *  Registros desordenados:
  *   > altas: append
  *   > bajas: marcado -> cambio signo del identificador (nota)
@@ -31,7 +36,7 @@ typedef struct examen {
  *   > consultas - promedio con y sin aplazo del alumno
  *               - cantidad de materias rendidas
  *               - promedio de notas de una materia dada.
- * 
+ *
  */
 
 long getfilesize(char *filename);

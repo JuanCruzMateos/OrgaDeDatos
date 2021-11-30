@@ -3,6 +3,11 @@
 #include <string.h>
 #include <unistd.h>
 
+/**
+ * @author Juan Cruz Mateos
+ * @matricula 15134
+ */
+
 #define FMT_DESC 100
 
 typedef struct item {

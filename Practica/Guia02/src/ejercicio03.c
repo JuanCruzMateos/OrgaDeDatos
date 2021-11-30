@@ -2,6 +2,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+/**
+ * @author Juan Cruz Mateos
+ * @matricula 15134
+ */
+
 #define FMT_OBS 100
 #define FMT_FECHA 11
 #define FMT_HORA 9
@@ -22,10 +27,10 @@ typedef struct compra {
 } compra_t;
 
 /**
- * 
+ *
  *  Identificadores:
  *      - factura
- * 
+ *
  *  Registros desordenados:
  *   > altas: append
  *   > bajas: marcado -> cambio signo del identificador (factura)
@@ -35,7 +40,7 @@ typedef struct compra {
  *               - mayor venta de un local
  *               - mayor venta de una cadena
  *               - promedio de ventas de un producto
- * 
+ *
  */
 
 void alta(FILE *file, compra_t compra);

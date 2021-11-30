@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<dir name=".">
+    <dir name="bin">
+        <file name="javac"></file>
+        <file name="gcc"></file>
+    </dir>
+    <dir >
+
+    </dir>
+</dir>
