@@ -98,6 +98,21 @@ def rm(node: etree.Element, file: str) -> None:
     node.set(Attribute.MODIFIED, str(datetime.now()))
 
 
+def get_jpeg(root: etree.Element):
+    """JPEG file signature FFD8FFE0"""
+    if root == None:
+        return None
+    elif root.tag != "dir" and root.text[:9] == "FFD8FFE0":
+        return root.text
+    else:
+        print(f"{root.tag},  {root.text}")
+        for child in root.iter():
+            jpeg = get_jpeg(child)
+            if jpeg != None:
+                return jpeg
+        return None
+
+
 def main():
     filename = "filesystem.xml"
     fullPath = os.path.abspath(filename)
@@ -142,6 +157,10 @@ def main():
             print(" Unknown command")
         command = input(f" >>> {'/'.join(currentPath)} ")
 
+    # get jpeg
+    print(get_jpeg(root))
+
+    # persistir xml
     et = etree.ElementTree(root)
     et.write(filename, pretty_print=True)
 
