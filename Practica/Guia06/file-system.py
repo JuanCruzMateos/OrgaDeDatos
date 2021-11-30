@@ -1,5 +1,5 @@
 #! /usr/bin/python3
-# @authors Noelia Echeverria, Juan Cruz Mateos
+# @authors Noelia Echeverria, Juan Cruz Mateos, Maria Camila Ezama
 from datetime import datetime
 from lxml import etree
 import os
@@ -98,29 +98,26 @@ def rm(node: etree.Element, file: str) -> None:
     node.set(Attribute.MODIFIED, str(datetime.now()))
 
 
-def get_jpeg(root: etree.Element):
+def extract_jpeg(node: etree.Element):
     """JPEG file signature FFD8FFE0"""
-    if root == None:
+    if node == None:
         return None
-    elif root.tag != "dir" and root.text[:9] == "FFD8FFE0":
-        return root.text
     else:
-        print(f"{root.tag},  {root.text}")
-        for child in root.iter():
-            jpeg = get_jpeg(child)
-            if jpeg != None:
-                return jpeg
+        for child in node.iter():
+            if child.tag != "dir" and child.text[:8] == "FFD8FFE0":
+                return child.text
         return None
 
 
 def main():
     filename = "filesystem.xml"
     fullPath = os.path.abspath(filename)
+
     xml_parser = etree.XMLParser(remove_blank_text=True)
     xml_tree = etree.parse(fullPath, xml_parser)
     root = xml_tree.getroot()
 
-    currentPath = [root.attrib['name']]
+    currentPath = [root.attrib[Attribute.NAME]]
     currentNode = root
 
     print(help())
@@ -158,7 +155,7 @@ def main():
         command = input(f" >>> {'/'.join(currentPath)} ")
 
     # get jpeg
-    print(get_jpeg(root))
+    print(f"jpeg = {extract_jpeg(root)}")
 
     # persistir xml
     et = etree.ElementTree(root)
