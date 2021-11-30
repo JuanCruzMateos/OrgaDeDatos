@@ -19,13 +19,15 @@ class Attribute:
 
 def help():
     return """ XML File system commands:
+      *  exit :: exit FS saving changes done
       *  help :: diplay help options
+      *  ls :: list all files & directories on current directory
       *  cd [path] :: navigate to path
-      *  ls [dir] :: list all files & directories on current directory
       *  mkdir [new dir] :: create new directory in current dir
       *  touch [new file] :: create new file on current dir
       *  rm [file] :: removes file on current dir
-      *  cat [file] :: displays file content """
+      *  cat [file] :: displays file content
+      *  'content to append' >> filename :: appends the content to the file """
 
 
 def ls(currentdir: etree.Element) -> None:
@@ -106,6 +108,7 @@ def main():
     currentPath = [root.attrib['name']]
     currentNode = root
 
+    print(help())
     command = input(f" >>> {'/'.join(currentPath)} ")
     while command.split()[0] != "exit":
         command_list = command.split()
