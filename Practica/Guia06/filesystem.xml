@@ -1,19 +1,21 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <dir name="~" date="1970-01-01">
-    <dir name="usr" date="1970-01-01">
-        <file name="pepe" date="1970-01-01" size="13">Hola soy pepe</file>
-        <file name="juan" date="1970-01-01" size="13">Hola soy juan</file>
-        <file name="maria" date="1970-01-01" size="14">Hola soy maria</file>
+  <dir name="usr" date="1970-01-01">
+    <file name="pepe" date="1970-01-01" size="13">Hola soy pepe</file>
+    <file name="juan" date="1970-01-01" size="13">Hola soy juan</file>
+    <file name="maria" date="1970-01-01" size="14">Hola soy maria</file>
+    <dir name="noe" date="2021-11-30">
+      <file name="holis" date="2021-11-30" size="4">hola</file>
     </dir>
-    <dir name="bin" date="1970-01-01">
-        <file name="gcc" date="1970-01-01" size="0"></file>
-        <file name="javac" date="1970-01-01" size="0"></file>
-        <file name="python" date="1970-01-01" size="0"></file>
-        <file name="unArchivo" date="1970-01-01" size="0"></file>
-    </dir>
-    <dir name="local" date="1970-01-01">
-        <file name="init.sh" date="1970-01-01" size="0"></file>
-        <file name="algo.sh" date="1970-01-01" size="0"></file>
-    </dir>
-    <file name="boot.sh" date="1970-01-01" size="0"></file>
+  </dir>
+  <dir name="bin" date="1970-01-01">
+    <file name="gcc" date="1970-01-01" size="0"/>
+    <file name="javac" date="1970-01-01" size="0"/>
+    <file name="python" date="1970-01-01" size="0"/>
+    <file name="unArchivo" date="1970-01-01" size="0"/>
+  </dir>
+  <dir name="local" date="1970-01-01">
+    <file name="init.sh" date="1970-01-01" size="0"/>
+    <file name="algo.sh" date="1970-01-01" size="0"/>
+  </dir>
+  <file name="boot.sh" date="1970-01-01" size="0"/>
 </dir>

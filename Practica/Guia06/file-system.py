@@ -56,13 +56,20 @@ def touch(currentDir: etree.Element, newFileName: str) -> None:
     newFile.set(Attribute.NAME, newFileName)
     newFile.set(Attribute.DATE, str(date.today()))
     newFile.set(Attribute.SIZE, "0")
+    newFile.text = ""
     currentDir.append(newFile)
 
 
 def append(node: etree.Element, file: str,  content: str) -> None:
     filenode = node.find(f".//{Tag.FILE}[@name='{file}']")
-    filenode.text += filenode.text + content
-    filenode.attrib[Attribute.SIZE] += len(content)
+    filenode.text = filenode.text + content
+    filenode.attrib[Attribute.SIZE] = str(int(
+        filenode.attrib[Attribute.SIZE]) + len(content))
+
+
+def cat(node: etree.Element, file: str) -> None:
+    filenode = node.find(f".//{Tag.FILE}[@name='{file}']")
+    return filenode.text
 
 
 def main():
@@ -83,33 +90,30 @@ def main():
         elif len(command_list) == 2:    # cd, mkdir, touch
             command, op = command_list
         else:                           # >>
-            command, op, file_content = command_list
+            command = command_list[0]
+            op = command_list[1]
+            file_content = "".join(command_list[2:])
+
         if command == "ls":
             ls(currentNode)
         elif command == "cd":
             currentNode = cd(currentPath, currentNode, op)
         elif command == "mkdir":
-            pass
+            mkdir(currentNode, op)
         elif command == "touch":
-            pass
+            touch(currentNode, op)
         elif command == ">>":
-            pass
+            append(currentNode, op, file_content)
+        elif command == "cat":
+            print(cat(currentNode, op))
         elif command == "help":
             print(help())
         else:
             print(" Unknown command")
         command = input(f" >>> {'/'.join(currentPath)} ")
 
-    # bin = cd(root, "bin")
-    # ls(bin)
-    # touch(bin, "")
-    # mkdir(root, "src")
-    # src = cd(root, "src")
-    # touch(src, "main.c")
-    # append(src, "main.c", "#include <stdio.h>")
-    # ls(root)
-
-    # tree.write(fullPath)
+    et = etree.ElementTree(root)
+    et.write(filename, pretty_print=True)
 
 
 if __name__ == "__main__":
