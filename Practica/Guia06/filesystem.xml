@@ -1,11 +1,18 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-
-<dir name=".">
-    <dir name="bin">
-        <file name="javac"></file>
-        <file name="gcc"></file>
+<dir name="~" size="256">
+    <dir name="usr" size="25">
+        <file name="pepe" size="12" />
+        <file name="juan" size="36" />
+        <file name="maria" size="25" />
     </dir>
-    <dir >
-
+    <dir name="bin" size="12">
+        <file name="gcc" size="74" />
+        <file name="javac" size="33" />
+        <file name="python" size="22" />
+        <file name="unArchivo" size="0" />
     </dir>
+    <dir name="local" size="88">
+        <file name="init.sh" size="14" />
+        <file name="algo.sh" size="21" />
+    </dir>
+    <file name="boot.sh" size="256" />
 </dir>
