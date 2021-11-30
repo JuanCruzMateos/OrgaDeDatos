@@ -1,5 +1,5 @@
 #! /usr/bin/python3
-# Juan Cruz Mateos
+# @author Juan Cruz Mateos
 import os
 import re
 

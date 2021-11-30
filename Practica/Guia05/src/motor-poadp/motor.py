@@ -1,5 +1,5 @@
 #! /usr/bin/python3
-# Juan Cruz Mateos
+# @author Juan Cruz Mateos
 import os
 import re
 import csv
@@ -41,18 +41,19 @@ def parseo(base_path="./") -> tuple:
                 full_path = os.path.join(root, file)
                 txt_files.append(full_path)
     print(f"{len(txt_files)} archivo(s) encontrado(s)")
-    print("Parseando...", end="")
-    id_doc = 1
-    for file in txt_files:
-        files_dic[id_doc] = file
-        with open(file, "rt") as txt:
-            palabras = txt.read().split()
-            procesadas = [re.sub("[\W_]+", "", palabra).lower()
-                          for palabra in palabras]
-            for palabra in procesadas:
-                parsed.append((palabra, id_doc))
-        id_doc += 1
-    print(" 100% listo")
+    if len(txt_files) > 0:
+        print("Parseando...", end="")
+        id_doc = 1
+        for file in txt_files:
+            files_dic[id_doc] = file
+            with open(file, "rt") as txt:
+                palabras = txt.read().split()
+                procesadas = [re.sub("[\W_]+", "", palabra).lower()
+                              for palabra in palabras]
+                for palabra in procesadas:
+                    parsed.append((palabra, id_doc))
+            id_doc += 1
+        print(" 100% listo")
     return files_dic, parsed
 
 
@@ -110,7 +111,7 @@ def dic_posting(agrupado: list) -> tuple:
     post.append((rr, agrupado[i][1], agrupado[i][2], -1))
     # post[rr] = (agrupado[i][1], agrupado[i][2], -1)
     dic.append((agrupado[i][0], agrupado[i][1], frec_tot, rr_ptr))
-    print(" 100% listo")
+    print(" 100% listo\n")
     return dic, post
 
 
@@ -124,29 +125,29 @@ def buscar(palabra: str, dic: list, post: list, files_id: list):
         index = dic[i][3]
         while index != -1:
             _, d, f, index = post[index]
-            print(f"file={files_id[d]:<35s} frec={f}")
+            print(f"Encontrada en el archivo:{files_id[d]}, {f} veces.")
 
 
 def main(args):
     base = "./" if len(args) == 1 else args[1]
     files_id, parsed = parseo(base)
     # print_table("Parseo", parsed, "Termino", "D#")
-    write_to_csv("parseo.csv", parsed, "Termino", "D#")
+    # write_to_csv("parseo.csv", parsed, "Termino", "D#")
 
     if len(files_id) > 0:
         ordered = ordenamiento(parsed)
         # print_table("Ordenamiento", ordered, "Termino", "D#")
-        write_to_csv("ordenamiento.csv", ordered, "Termino", "D#")
+        # write_to_csv("ordenamiento.csv", ordered, "Termino", "D#")
 
         grouped = agrupamiento(ordered)
         # print_table("Agrupamiento", grouped, "Termino", "D#", "F#")
-        write_to_csv("agrupamiento.csv", grouped, "Termino", "D#", "F#")
+        # write_to_csv("agrupamiento.csv", grouped, "Termino", "D#", "F#")
 
         dic, pos = dic_posting(grouped)
         # print_table("Diccionario", dic, "Termino", "TD#", "FT#", "#RR")
-        write_to_csv("diccionario.csv", dic, "Termino", "TD#", "FT#", "#RR")
+        # write_to_csv("diccionario.csv", dic, "Termino", "TD#", "FT#", "#RR")
         # print_table("Posting", pos, "#RR", "D#", "F#", "#PR")
-        write_to_csv("posting.csv", pos, "#RR", "D#", "F#", "#PR")
+        # write_to_csv("posting.csv", pos, "#RR", "D#", "F#", "#PR")
 
         res = 'y'
         while res == 'y':

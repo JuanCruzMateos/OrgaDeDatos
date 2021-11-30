@@ -1,4 +1,5 @@
 #! /usr/bin/python3
+# @author Juan Cruz Mateos
 
 # Se basa en la repeticion de elementos consecutivos
 # Si se repiten tres o más elementos consecutivamente, se utiliza el método de compresión RLE.
