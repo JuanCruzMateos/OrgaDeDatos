@@ -19,14 +19,15 @@ class Attribute:
 
 def help():
     return """ XML File system commands:
-      *  exit :: exit FS saving changes done
-      *  help :: diplay help options
-      *  ls :: list all files & directories on current directory
-      *  cd [path] :: navigate to path
-      *  mkdir [new dir] :: create new directory in current dir
+      *  jpeg             :: extrae jpeg sin recorrer FS
+      *  exit             :: exit FS saving changes done
+      *  help             :: diplay help options
+      *  ls               :: list all files & directories on current directory
+      *  cd [.. or dir]   :: navigate to path
+      *  mkdir [new dir]  :: create new directory in current dir
       *  touch [new file] :: create new file on current dir
-      *  rm [file] :: removes file on current dir
-      *  cat [file] :: displays file content
+      *  rm [file]        :: removes file on current dir
+      *  cat [file]       :: displays file content
       *  'content to append' >> filename :: appends the content to the file """
 
 
@@ -120,7 +121,7 @@ def main():
     currentPath = [root.attrib[Attribute.NAME]]
     currentNode = root
 
-    print(help())
+    print(help() + "\n")
     command = input(f" >>> {'/'.join(currentPath)} ")
     while command.split()[0] != "exit":
         command_list = command.split()
@@ -148,14 +149,13 @@ def main():
             print(cat(currentNode, op))
         elif command == "rm":
             rm(currentNode, op)
+        elif command == "jpeg":
+            print(f"jpeg = {extract_jpeg(root)}")
         elif command == "help":
             print(help())
         else:
             print(" Unknown command")
         command = input(f" >>> {'/'.join(currentPath)} ")
-
-    # get jpeg
-    print(f"jpeg = {extract_jpeg(root)}")
 
     # persistir xml
     et = etree.ElementTree(root)
