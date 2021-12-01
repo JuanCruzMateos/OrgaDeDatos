@@ -28,7 +28,7 @@ def help():
       *  touch [new file] :: create new file on current dir
       *  rm [file]        :: removes file on current dir
       *  cat [file]       :: displays file content
-      *  'content to append' >> filename :: appends the content to the file """
+      *  'text' >> fname  :: appends the content to the file """
 
 
 def ls(currentdir: etree.Element) -> None:
