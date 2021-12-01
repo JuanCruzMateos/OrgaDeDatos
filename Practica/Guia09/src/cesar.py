@@ -29,12 +29,11 @@ def desencriptar(alpha: list, shift: int, msg: str) -> str:
 def main():
     lower = [char for char in ascii_lowercase]
     lower.insert(14, "ñ")
-
     upper = [char for char in ascii_uppercase]
     upper.insert(14, "Ñ")
-
     complete = lower + upper
     complete += list("áéíóú,;.")
+
     shift = 10
     msg = "El cifrado César, es una de las técnicas más simples; consiste en reemplazar cada letra por otra que se encuentra un número fijo de posiciones más adelante."
     noe = "Ñu mroBkny MdCkBh ñC Ewk nñ ukC DdmwrmkC vcC CrvzuñCi mywCrCDñ ñw BññvzukJkB mknk uñDBk zyB yDBk AEñ Cñ ñwmEñwDBk Ew wgvñBy orsy nñ zyCrmrywñC vcC knñukwDñj"
