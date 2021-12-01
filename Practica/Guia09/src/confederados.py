@@ -33,7 +33,7 @@ def desencriptar(alpha: list, valor_letra: dict, letra_valor: dict, key: str, ms
         else:
             p = valor_letra[char] - valor_letra[key[i]]
             if p < 1:
-                p += len(alpha) - 1
+                p += len(alpha)
             i += 1
             desencrip += letra_valor[p]
     return desencrip
@@ -59,7 +59,7 @@ def main():
         print(encrip)
         print(enc_noe == encrip)
 
-    noe_msg = desencriptar(complete, valor_letra, letra_valor, key, msg)
+    noe_msg = desencriptar(complete, valor_letra, letra_valor, key, enc_noe)
     print(noe_msg)
     print(noe_msg == mensajes[0])
 
