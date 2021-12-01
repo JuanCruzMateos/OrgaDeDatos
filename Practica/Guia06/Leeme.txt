@@ -1,0 +1,10 @@
+# Lenguaje utilizado:  python
+# Versión: 3.6 o superior
+# Requirements --> Es necesario instalar lxml --> utilizar pip
+pip install lxml
+
+# para ejecutar hacer lo siguiente
+python file-system
+
+# El ejercicio 2 es una de las opciones del file-system.
+# opcion: jpeg
