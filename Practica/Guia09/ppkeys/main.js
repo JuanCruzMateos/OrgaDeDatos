@@ -1,2 +1,1 @@
-#!/usr/local/bin/node
-console.log("ecriptado");
+console.log('encriptado');
