@@ -1,11 +1,12 @@
+package Practica.Guia08.src;
+
 import java.util.TreeMap;
 import java.util.PriorityQueue;
 
 /**
  * @author Juan Cruz Mateos
- *         TODO: revisar porque da distintinto a huffman.py -> ordenamiento en
- *         pq
  */
+// revisar porque da distintinto a huffman.py -> ordenamiento en pq
 public class Huffman {
     protected TreeMap<String, Integer> frec = new TreeMap<>();
     protected TreeMap<String, Double> prob = new TreeMap<>();

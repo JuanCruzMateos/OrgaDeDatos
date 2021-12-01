@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE entradas SYSTEM "entradas.dtd">
+
+<entradas>
+    <entrada>
+        <datosCompra>
+            <tipoCompra>Online</tipoCompra>
+            <horaVenta>08:21</horaVenta>
+            <fechaVenta>2021-03-20</fechaVenta>
+            <dniComprador>38443617</dniComprador>
+        </datosCompra>
+        <datosFuncion>
+            <nroButaca>35</nroButaca>
+            <nroSala>3</nroSala>
+            <pelicula>Harry Potter y las Reliquias de la Muerte P2</pelicula>
+            <tipo>2D</tipo>
+            <fecha>2021-03-20</fecha>
+            <hora>19:00</hora>
+        </datosFuncion>
+        <voucher>
+            <item>
+                <tipo>Pochoclos</tipo>
+                <cantidad>3</cantidad>
+                <precio>100.0</precio>
+                <subtotal>300.0</subtotal>
+            </item>
+            <item>
+                <tipo>Coca Cola</tipo>
+                <cantidad>1</cantidad>
+                <precio>150.0</precio>
+                <subtotal>150.0</subtotal>
+            </item>
+            <total>450.0</total>
+        </voucher>
+    </entrada>
+
+    <entrada>
+        <datosCompra>
+            <tipoCompra>Presencial</tipoCompra>
+            <horaVenta>10:21</horaVenta>
+            <fechaVenta>2021-03-20</fechaVenta>
+            <dniComprador>36443617</dniComprador>
+        </datosCompra>
+        <datosFuncion>
+            <nroButaca>26</nroButaca>
+            <nroSala>3</nroSala>
+            <pelicula>Harry Potter y las Reliquias de la Muerte P2</pelicula>
+            <tipo>2D</tipo>
+            <fecha>2021-03-20</fecha>
+            <hora>19:00</hora>
+        </datosFuncion>
+    </entrada>
+</entradas>

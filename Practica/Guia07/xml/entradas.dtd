@@ -1,0 +1,20 @@
+<!ELEMENT entradas (entrada*)>
+<!ELEMENT entrada (datosCompra, datosFuncion, voucher?)>
+<!ELEMENT datosCompra (tipoCompra, horaVenta, fechaVenta, dniComprador)>
+<!ELEMENT tipoCompra (#PCDATA)>
+<!ELEMENT horaVenta (#PCDATA)>
+<!ELEMENT fechaVenta (#PCDATA)>
+<!ELEMENT dniComprador (#PCDATA)>
+<!ELEMENT datosFuncion (nroButaca, nroSala, pelicula, tipo, fecha, hora)>
+<!ELEMENT nroButaca (#PCDATA)>
+<!ELEMENT nroSala (#PCDATA)>
+<!ELEMENT pelicula (#PCDATA)>
+<!ELEMENT tipo (#PCDATA)>
+<!ELEMENT fecha (#PCDATA)>
+<!ELEMENT hora (#PCDATA)>
+<!ELEMENT voucher (item*, total)>
+<!ELEMENT item (tipo, cantidad, precio, subtotal)>
+<!ELEMENT cantidad (#PCDATA)>
+<!ELEMENT precio (#PCDATA)>
+<!ELEMENT subtotal (#PCDATA)>
+<!ELEMENT total (#PCDATA)>

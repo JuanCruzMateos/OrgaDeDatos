@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE factura SYSTEM "factura.dtd">
+
+<factura>
+    <tipo>A</tipo>
+    <fecha>2021-10-26</fecha>
+    <numero>14253699852114</numero>
+    <tipoPago>Efectivo</tipoPago>
+    <empresa>
+        <nombre>evil corp</nombre>
+        <direccion>calle falsa 123</direccion>
+        <cuit>123456</cuit>
+        <datosContacto>No tenemos</datosContacto>
+    </empresa>
+    <cliente>
+        <nombre>Juan Cruz</nombre>
+        <direccion>calle falsa 143</direccion>
+        <cuit>1478523695</cuit>
+        <datosContacto>Tampoco tiene</datosContacto>
+        <tipo>Consumidor Final</tipo>
+    </cliente>
+    <renglones>
+        <renglon>
+            <codigo>FF1421369</codigo>
+            <descripcion>Empanada</descripcion>
+            <cantidad>100</cantidad>
+            <precio>150.0</precio>
+            <iva>0.21</iva>
+            <importe>18150.0</importe>
+        </renglon>
+    </renglones>
+    <infoTotal>
+        <tipoDescuento>0</tipoDescuento>
+        <descuento>0.0</descuento>
+        <total>18150.0</total>
+    </infoTotal>
+</factura>

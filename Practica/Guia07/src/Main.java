@@ -30,7 +30,7 @@ public class Main {
         Document documento = implementation.createDocument(null, "Toma_de_Temperaturas", null);
         documento.setXmlVersion("1.0");
 
-        Element tomaDeTemperaturas = documento.createElement("Toma_de_Temperaturas");
+        // Element tomaDeTemperaturas = documento.createElement("Toma_de_Temperaturas");
 
         Element t1 = documento.createElement("Toma_de_Temperatura");
         Element dia = documento.createElement("Dia");

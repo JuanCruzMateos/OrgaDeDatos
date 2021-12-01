@@ -1,0 +1,23 @@
+<!ELEMENT factura (tipo, fecha, numero, tipoPago, empresa, cliente, renglones, infoTotal)>
+<!ELEMENT tipo (#PCDATA)>
+<!ELEMENT fecha (#PCDATA)>
+<!ELEMENT numero (#PCDATA)>
+<!ELEMENT tipoPago (#PCDATA)>
+<!ELEMENT empresa (nombre, direccion, cuit, datosContacto)>
+<!ELEMENT nombre (#PCDATA)>
+<!ELEMENT direccion (#PCDATA)>
+<!ELEMENT cuit (#PCDATA)>
+<!ELEMENT datosContacto (#PCDATA)>
+<!ELEMENT cliente (nombre, direccion, cuit, datosContacto, tipo)>
+<!ELEMENT renglones (renglon+)>
+<!ELEMENT renglon (codigo, descripcion, cantidad, precio, iva, importe)>
+<!ELEMENT codigo (#PCDATA)>
+<!ELEMENT descripcion (#PCDATA)>
+<!ELEMENT cantidad (#PCDATA)>
+<!ELEMENT precio (#PCDATA)>
+<!ELEMENT iva (#PCDATA)>
+<!ELEMENT importe (#PCDATA)>
+<!ELEMENT infoTotal (tipoDescuento, descuento, total)>
+<!ELEMENT tipoDescuento (#PCDATA)>
+<!ELEMENT descuento (#PCDATA)>
+<!ELEMENT total (#PCDATA)>
