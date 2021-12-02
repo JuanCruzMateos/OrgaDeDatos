@@ -1,7 +1,12 @@
-// gcc -g -Wall -Wconversion -Wtype-limits -pedantic -Werror -o ./bin/arbol arbol.c
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+
+/**
+ * @author Juan Cruz Mateos
+ *
+ * Compilacion:: gcc -g -Wall -Wconversion -Wtype-limits -pedantic -Werror -o ./bin/arbol arbol.c
+ */
 
 typedef struct nodo_persist {
     int clave;

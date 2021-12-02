@@ -2,6 +2,16 @@ import random
 from time import time
 
 
+class Producto:
+    def __init__(self, id, nombre, descripcion) -> None:
+        self.id = id
+        self.nombre = nombre
+        self.descripcion = descripcion
+
+    def __bytes__(self) -> bytes:
+        return f"{self.id}{self.nombre}{self.descripcion}".encode()
+
+
 def merge(arr, l, m, r):
     n1 = m - l + 1
     n2 = r - m
@@ -76,7 +86,8 @@ def main():
     archivo = open("datos1.bin", "wb")
     # SE CREA ARCHIVO
     for i in range(150000):
-        archivo.write([random.randint(0, 150000), "Producto", "Descripcion"])
+        archivo.write(Producto(random.randint(
+            0, 150000), "Producto", "Descripcion"))
     archivo.close()
     # ARCHIVO CREADO, AHORA SE LEE DE ARCHIVO PARA PONER EN EL ARREGLO
     archivo = open("datos1.bin", "rb")

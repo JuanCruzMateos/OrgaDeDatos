@@ -1,7 +1,12 @@
-// gcc -g -Wall -Wconversion -Wtype-limits -pedantic -Werror -o ./bin/heap heap.c
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+
+/**
+ * @author Juan Cruz Mateos
+ *
+ * Compilacion:: gcc -g -Wall -Wconversion -Wtype-limits -pedantic -Werror -o ./bin/heap heap.c
+ */
 
 #define MAX 50
 
