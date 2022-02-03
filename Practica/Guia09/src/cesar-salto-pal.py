@@ -3,6 +3,7 @@
 from pprint import pprint
 from string import ascii_lowercase
 from string import ascii_uppercase
+from string import digits
 
 
 def generate_dicts(alphabet: list, palabra_clave: str, salto: int) -> tuple:
@@ -37,26 +38,32 @@ def cesar(code: dict, msg: str) -> str:
 
 
 def main():
-    lower = [char for char in ascii_lowercase]
-    lower.insert(14, "ñ")
+    # lower = [char for char in ascii_lowercase]
+    # lower.insert(14, "ñ")
     upper = [char for char in ascii_uppercase]
-    upper.insert(14, "Ñ")
-    complete = lower + upper
-    complete += list("áéíóú,;.")
+    # upper.insert(14, "Ñ")
+    numbers = [nro for nro in digits]
 
-    palabra_clave = "SeCReTo"
-    salto = 5
-    encode, decode = generate_dicts(complete, palabra_clave, salto)
+    complete = upper + numbers
+    # complete += list("áéíóú,;.")
 
-    msg = "El cifrado César, es una de las técnicas más simples; consiste en reemplazar cada letra por otra que se encuentra un número fijo de posiciones más adelante."
-    noe = "va ,RSió;f tWjóiá .j lcó ;. aój kW,cR,ój bVj jRbga.jé ,fcjRjk. .c i..bgaóqói ,ó;ó a.kió gfi fkió hl. j. .c,l.ckió lc cZb.if SRTf ;. gfjR,Rfc.j bVj ó;.aóck.í"
+    palabra_clave = "MURCIELAGO"
+    # salto = 5
 
-    noe_msg = cesar(decode, noe)
-    print(noe_msg)
-    yo_enc = cesar(encode, msg)
+    # msg = "El cifrado César, es una de las técnicas más simples; consiste en reemplazar cada letra por otra que se encuentra un número fijo de posiciones más adelante."
+    # noe = "va ,RSió;f tWjóiá .j lcó ;. aój kW,cR,ój bVj jRbga.jé ,fcjRjk. .c i..bgaóqói ,ó;ó a.kió gfi fkió hl. j. .c,l.ckió lc cZb.if SRTf ;. gfjR,Rfc.j bVj ó;.aóck.í"
 
-    print(msg == noe_msg)
-    print(yo_enc == noe)
+    enc = "18 EX8LU 01 Z1EXI 1IX JN D 8X Z8XG1 9AIZ518X3U"
+    # noe_msg = cesar(decode, noe)
+    # print(noe_msg)
+    # yo_enc = cesar(encode, msg)
+
+    # print(msg == noe_msg)
+    # print(yo_enc == noe)
+
+    for i in range(len(complete)-1):
+        encode, decode = generate_dicts(complete, palabra_clave, i)
+        print(f"test({i}) {cesar(decode, enc)}\n")
 
     # p_clave_sin_dup = ''.join(
     #     sorted(set(palabra_clave), key=palabra_clave.index))
